@@ -30,6 +30,9 @@ namespace JibbR
                       .Singleton()
                       .Use<SettingsManager>();
 
+                kernel.For<IAdapterManager>()
+                      .Use<AdapterManager>();
+
                 kernel.For<IRobot>()
                       .Use<Robot>();
 

@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdapterManager.cs" />
     <Compile Include="AdapterScanner.cs" />
     <Compile Include="Adapters\BingAdapter.cs" />
     <Compile Include="Adapters\BingClient.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Adapters\KilnAdapter.cs" />
     <Compile Include="Annotations\ReSharper.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="IAdapterManager.cs" />
     <Compile Include="IRobot.cs" />
     <Compile Include="IRobotAdapter.cs" />
     <Compile Include="IRobotSettings.cs" />

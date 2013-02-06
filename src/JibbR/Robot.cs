@@ -6,8 +6,6 @@ using System.Text.RegularExpressions;
 using JabbR.Client;
 using JabbR.Client.Models;
 
-using StructureMap;
-
 namespace JibbR
 {
     using MessageHandler = Action<ISession, string, string, Match>;
@@ -16,18 +14,17 @@ namespace JibbR
     {
         protected const RegexOptions DefaultRegexOptions = RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Compiled;
 
-        private readonly IContainer _container;
+        private readonly IAdapterManager _adapterManager;
         private readonly JabbRClient _client;
 
         private readonly List<string> _currentrooms = new List<string>();
-        private readonly List<IRobotAdapter> _adapters = new List<IRobotAdapter>();
 
         private readonly Dictionary<string, MessageHandler> _listenHandler = new Dictionary<string, MessageHandler>();
         private readonly Dictionary<string, MessageHandler> _respondHandler = new Dictionary<string, MessageHandler>();
 
-        public Robot(IContainer container, ISettingsManager settingsManager, Uri host)
+        public Robot(IAdapterManager adapterManager, ISettingsManager settingsManager, Uri host)
         {
-            _container = container;
+            _adapterManager = adapterManager;
 
             Settings = settingsManager.LoadSettings();
 
@@ -56,29 +53,11 @@ namespace JibbR
                 }
             };
 
-            SetupAdapters();
+            _adapterManager.SetupAdapters(this);
         }
 
         public string Name { get; private set; }
         public IRobotSettings Settings { get; private set; }
-
-        private void SetupAdapters()
-        {
-            foreach (var adapter in Settings.Adapters)
-            {
-                Console.WriteLine("Trying to load adapter named '{0}'", adapter);
-
-                var instance = _container.TryGetInstance<IRobotAdapter>(adapter);
-                if (instance == null)
-                {
-                    Console.WriteLine("No adapter found named '{0}'", adapter);
-                    continue;
-                }
-
-                instance.Setup(this);
-                _adapters.Add(instance);
-            }
-        }
 
         private void ClientOnMessageReceived(Message message, string room)
         {
