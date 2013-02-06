@@ -10,6 +10,7 @@ namespace JibbR
         string Name { get; }
         IRobotSettings Settings { get; }
 
+        void SetupClient(Uri host);
         void Connect(string userName, string password);
         void Disconnect();
         void JoinRoom(string roomName);

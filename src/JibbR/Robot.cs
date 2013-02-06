@@ -15,45 +15,19 @@ namespace JibbR
         protected const RegexOptions DefaultRegexOptions = RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Compiled;
 
         private readonly IAdapterManager _adapterManager;
-        private readonly JabbRClient _client;
+        private JabbRClient _client;
+        private bool isSetup;
 
         private readonly List<string> _currentrooms = new List<string>();
 
         private readonly Dictionary<string, MessageHandler> _listenHandler = new Dictionary<string, MessageHandler>();
         private readonly Dictionary<string, MessageHandler> _respondHandler = new Dictionary<string, MessageHandler>();
 
-        public Robot(IAdapterManager adapterManager, ISettingsManager settingsManager, Uri host)
+        public Robot(IAdapterManager adapterManager, ISettingsManager settingsManager)
         {
             _adapterManager = adapterManager;
 
             Settings = settingsManager.LoadSettings();
-
-            _client = new JabbRClient(host);
-
-            _client.MessageReceived += ClientOnMessageReceived;
-
-            // this is a total mess, but it works for now :)
-            _client.PrivateMessage += (from, to, message) =>
-            {
-                if (message.StartsWith("note:", StringComparison.OrdinalIgnoreCase))
-                {
-                    var note = message.Substring(5).Trim();
-                    _client.SetNote(note).ContinueWith(task =>
-                    {
-                        _client.SendPrivateMessage(from, "new note set");
-                    });
-                }
-                else if (message.StartsWith("flag:", StringComparison.OrdinalIgnoreCase))
-                {
-                    var flag = message.Substring(5).Trim();
-                    _client.SetFlag(flag).ContinueWith(task =>
-                    {
-                        _client.SendPrivateMessage(from, "new flag set");
-                    });
-                }
-            };
-
-            _adapterManager.SetupAdapters(this);
         }
 
         public string Name { get; private set; }
@@ -106,6 +80,44 @@ namespace JibbR
             }
 
             return false;
+        }
+
+        public void SetupClient(Uri host)
+        {
+            if (isSetup)
+            {
+                Console.Error.WriteLine("Client is already setup.");
+                return;
+            }
+
+            isSetup = true;
+
+            _client = new JabbRClient(host);
+
+            _client.MessageReceived += ClientOnMessageReceived;
+
+            // this is a total mess, but it works for now :)
+            _client.PrivateMessage += (from, to, message) =>
+            {
+                if (message.StartsWith("note:", StringComparison.OrdinalIgnoreCase))
+                {
+                    var note = message.Substring(5).Trim();
+                    _client.SetNote(note).ContinueWith(task =>
+                    {
+                        _client.SendPrivateMessage(from, "new note set");
+                    });
+                }
+                else if (message.StartsWith("flag:", StringComparison.OrdinalIgnoreCase))
+                {
+                    var flag = message.Substring(5).Trim();
+                    _client.SetFlag(flag).ContinueWith(task =>
+                    {
+                        _client.SendPrivateMessage(from, "new flag set");
+                    });
+                }
+            };
+
+            _adapterManager.SetupAdapters(this);
         }
 
         public void Connect(string userName, string password)

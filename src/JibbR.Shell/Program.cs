@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-
-using StructureMap.Pipeline;
 
 namespace JibbR.Shell
 {
@@ -11,27 +8,24 @@ namespace JibbR.Shell
     {
         static void Main(string[] args)
         {
-            var hostUrl = System.Configuration.ConfigurationManager.AppSettings["jibbr:host"];
+            var host = System.Configuration.ConfigurationManager.AppSettings["jibbr:host"];
             var userName = System.Configuration.ConfigurationManager.AppSettings["jibbr:username"];
             var password = System.Configuration.ConfigurationManager.AppSettings["jibbr:password"];
 
             var bootstrapper = new Bootstrapper();
             bootstrapper.Bootstrap();
 
-            var container = bootstrapper.Container;
-
             var rooms = new[]
             {
                 "development"
             };
 
-            var robot = container.GetInstance<IRobot>(new ExplicitArguments(new Dictionary<string, object>
-            {
-                { "host", new Uri(hostUrl) },
-            }));
+            var robot = bootstrapper.Container.GetInstance<IRobot>();
 
             try
             {
+                robot.SetupClient(new Uri(host));
+
                 robot.Connect(userName, password);
 
                 robot.JoinRooms(rooms);
