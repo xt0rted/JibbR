@@ -1,9 +1,10 @@
-﻿namespace JibbR
-{
-    using System;
-    using System.Collections.Generic;
-    using StructureMap;
+﻿using System;
+using System.Collections.Generic;
 
+using StructureMap;
+
+namespace JibbR
+{
     public class AdapterManager : IAdapterManager
     {
         private readonly IContainer _container;

@@ -1,7 +1,7 @@
-﻿namespace JibbR
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace JibbR
+{
     public interface IAdapterManager
     {
         IList<IRobotAdapter> Adapters { get; }
