@@ -1,10 +1,9 @@
 ﻿// Note: none of these actually do anything... they're just stubs for testing at the moment
 namespace JibbR.Adapters
 {
+    [RobotAdapterMetadata("kiln-adapter")]
     public class KilnAdapter : IRobotAdapter
     {
-        public string Name { get { return "kiln-adapter"; } }
-
         public void Setup(IRobot robot)
         {
             robot.AddResponder(@"push\s+(?<project>.*)\s+from\s+(?<from>.*)\s+to\s+(?<to>.*)", (session, message, room, match) =>

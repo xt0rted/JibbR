@@ -1,9 +1,8 @@
 ﻿namespace JibbR.Adapters
 {
+    [RobotAdapterMetadata("default-adapter")]
     public class DefaultAdapter : IRobotAdapter
     {
-        public string Name { get { return "default-adapter"; } }
-
         public void Setup(IRobot robot)
         {
             robot.AddResponder(@"help\s*(?<command>.*)?$", (session, message, room, match) =>

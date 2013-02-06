@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 
 namespace JibbR.Adapters
 {
+    [RobotAdapterMetadata("bing-adapter")]
     public class BingAdapter : IRobotAdapter
     {
         private readonly IBingClient _bingClient;
@@ -22,8 +23,6 @@ namespace JibbR.Adapters
                 Console.Error.WriteLine("No API key was found for bing. If you do not have one you can get one by signing up here http://www.bing.com/developers/");
             }
         }
-
-        public string Name { get { return "bing-adapter"; } }
 
         public void Setup(IRobot robot)
         {

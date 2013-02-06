@@ -20,7 +20,7 @@ namespace JibbR
                     scanner.LookForRegistries();
 
                     // just for us
-                    scanner.AddAllTypesOf<IRobotAdapter>();
+                    scanner.Convention<AdapterScanner>();
                 });
 
                 kernel.For<IFileSystem>()

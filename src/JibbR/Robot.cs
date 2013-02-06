@@ -64,18 +64,19 @@ namespace JibbR
 
         private void SetupAdapters()
         {
-            var adapters = _container.GetAllInstances<IRobotAdapter>();
-
-            foreach (var adapter in adapters)
+            foreach (var adapter in Settings.Adapters)
             {
-                if (!Settings.Adapters.Contains(adapter.Name, StringComparer.OrdinalIgnoreCase))
+                Console.WriteLine("Trying to load adapter named '{0}'", adapter);
+
+                var instance = _container.TryGetInstance<IRobotAdapter>(adapter);
+                if (instance == null)
                 {
+                    Console.WriteLine("No adapter found named '{0}'", adapter);
                     continue;
                 }
 
-                Console.WriteLine("Loaded Adapter: {0}", adapter.Name);
-                adapter.Setup(this);
-                _adapters.Add(adapter);
+                instance.Setup(this);
+                _adapters.Add(instance);
             }
         }
 
