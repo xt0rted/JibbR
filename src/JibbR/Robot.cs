@@ -9,6 +9,7 @@ using JabbR.Client.Models;
 namespace JibbR
 {
     using MessageHandler = Action<ISession, string, string, Match>;
+    using PrivateMessageHandler = Action<ISession, string, string, Match>;
 
     public class Robot : IRobot
     {
@@ -20,8 +21,9 @@ namespace JibbR
 
         private readonly List<string> _currentrooms = new List<string>();
 
-        private readonly Dictionary<string, MessageHandler> _listenHandler = new Dictionary<string, MessageHandler>();
-        private readonly Dictionary<string, MessageHandler> _respondHandler = new Dictionary<string, MessageHandler>();
+        private readonly Dictionary<string, MessageHandler> _listenerHandlers = new Dictionary<string, MessageHandler>();
+        private readonly Dictionary<string, MessageHandler> _responderHandlers = new Dictionary<string, MessageHandler>();
+        private readonly Dictionary<string, MessageHandler> _privateResponderHandlers = new Dictionary<string, PrivateMessageHandler>();
 
         public Robot(IAdapterManager adapterManager, ISettingsManager settingsManager)
         {
@@ -50,18 +52,40 @@ namespace JibbR
             string messageBody;
             if (match.Success)
             {
-                handlers = _respondHandler;
+                handlers = _responderHandlers;
                 messageBody = match.Groups["message"].Value;
             }
             else
             {
-                handlers = _listenHandler;
+                handlers = _listenerHandlers;
                 messageBody = message.Content;
             }
 
             foreach (var handler in handlers)
             {
                 var result = HandleCommand(session, messageBody, room, handler.Key, handler.Value);
+                if (result)
+                {
+                    break;
+                }
+            }
+        }
+
+        private void ClientOnPrivateMessage(string from, string to, string message)
+        {
+            // we never want to respond to ourself...
+            if (string.Equals(from, Name, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            Console.WriteLine("private message received");
+
+            ISession session = new Session(_client, null, Name);
+
+            foreach (var handler in _privateResponderHandlers)
+            {
+                var result = HandlePrivateCommand(session, message, from, handler.Key, handler.Value);
                 if (result)
                 {
                     break;
@@ -82,6 +106,19 @@ namespace JibbR
             return false;
         }
 
+        private bool HandlePrivateCommand(ISession session, string message, string from, string regex, PrivateMessageHandler callback)
+        {
+            var match = Regex.Match(message, regex, DefaultRegexOptions);
+            if (match.Success)
+            {
+                callback(session, message, from, match);
+
+                return true;
+            }
+
+            return false;
+        }
+
         public void SetupClient(Uri host)
         {
             if (isSetup)
@@ -95,27 +132,7 @@ namespace JibbR
             _client = new JabbRClient(host);
 
             _client.MessageReceived += ClientOnMessageReceived;
-
-            // this is a total mess, but it works for now :)
-            _client.PrivateMessage += (from, to, message) =>
-            {
-                if (message.StartsWith("note:", StringComparison.OrdinalIgnoreCase))
-                {
-                    var note = message.Substring(5).Trim();
-                    _client.SetNote(note).ContinueWith(task =>
-                    {
-                        _client.SendPrivateMessage(from, "new note set");
-                    });
-                }
-                else if (message.StartsWith("flag:", StringComparison.OrdinalIgnoreCase))
-                {
-                    var flag = message.Substring(5).Trim();
-                    _client.SetFlag(flag).ContinueWith(task =>
-                    {
-                        _client.SendPrivateMessage(from, "new flag set");
-                    });
-                }
-            };
+            _client.PrivateMessage += ClientOnPrivateMessage;
 
             _adapterManager.SetupAdapters(this);
         }
@@ -150,12 +167,17 @@ namespace JibbR
 
         public void AddListener(string regex, MessageHandler function)
         {
-            _listenHandler.Add(regex, function);
+            _listenerHandlers.Add(regex, function);
         }
 
         public void AddResponder(string regex, MessageHandler function)
         {
-            _respondHandler.Add(regex, function);
+            _responderHandlers.Add(regex, function);
+        }
+
+        public void AddPrivateResponder(string regex, PrivateMessageHandler function)
+        {
+            _privateResponderHandlers.Add(regex, function);
         }
     }
 }
