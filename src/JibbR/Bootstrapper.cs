@@ -41,9 +41,9 @@ namespace JibbR
             });
         }
 
-        public IContainer Container
+        public IRobot CreateRobot()
         {
-            get { return ObjectFactory.Container; }
+            return ObjectFactory.Container.GetInstance<IRobot>();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace JibbR.Shell
                 "development"
             };
 
-            var robot = bootstrapper.Container.GetInstance<IRobot>();
+            var robot = bootstrapper.CreateRobot();
 
             try
             {
