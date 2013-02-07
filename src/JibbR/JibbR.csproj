@@ -64,9 +64,10 @@
     <Compile Include="AdapterDetails.cs" />
     <Compile Include="AdapterManager.cs" />
     <Compile Include="AdapterScanner.cs" />
-    <Compile Include="Adapters\BingAdapter.cs" />
+    <Compile Include="Adapters\BingWebAdapter.cs" />
     <Compile Include="Adapters\BingAdapterSettings.cs" />
     <Compile Include="Adapters\BingClient.cs" />
+    <Compile Include="Adapters\BingImageAdapter.cs" />
     <Compile Include="Adapters\DefaultAdapter.cs" />
     <Compile Include="Adapters\IBingClient.cs" />
     <Compile Include="Adapters\KilnAdapter.cs" />
