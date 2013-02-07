@@ -43,7 +43,7 @@ namespace JibbR
             _fileSystem.File.WriteAllText(SettingsPath, json);
         }
 
-        public RobotSettings LoadSettings()
+        public IRobotSettings LoadSettings()
         {
             var json = _fileSystem.File.ReadAllText(SettingsPath);
             var settings = JsonConvert.DeserializeObject<RobotSettings>(json);

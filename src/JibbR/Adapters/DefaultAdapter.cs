@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace JibbR.Adapters
+﻿namespace JibbR.Adapters
 {
     [RobotAdapterMetadata("default-adapter")]
     public class DefaultAdapter : IRobotAdapter

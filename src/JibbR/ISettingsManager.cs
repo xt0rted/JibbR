@@ -5,6 +5,6 @@
         string SettingsPath { get; }
 
         void CreateDefaultSettingsFile();
-        RobotSettings LoadSettings();
+        IRobotSettings LoadSettings();
     }
 }

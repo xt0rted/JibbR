@@ -10,15 +10,17 @@ namespace JibbR.Adapters
     public class BingAdapter : IRobotAdapter
     {
         private readonly IBingClient _bingClient;
-        private readonly string _bingApiKey;
+        private readonly BingAdapterSettings _settings;
 
-        public BingAdapter(IBingClient bingClient)
+        public BingAdapter(ISettingsManager settingsManager, IBingClient bingClient)
         {
             _bingClient = bingClient;
 
-            _bingApiKey = System.Configuration.ConfigurationManager.AppSettings["jibbr:bingadapter:apikey"];
+            _settings = settingsManager.LoadSettings()
+                                       .For<BingAdapter>()
+                                       .ToObject<BingAdapterSettings>();
 
-            if (string.IsNullOrWhiteSpace(_bingApiKey))
+            if (string.IsNullOrWhiteSpace(_settings.ApiKey))
             {
                 Console.Error.WriteLine("No API key was found for bing. If you do not have one you can get one by signing up here http://www.bing.com/developers/");
             }
@@ -35,14 +37,18 @@ namespace JibbR.Adapters
                     var result = _bingClient.WebSearch(query);
 
                     var resultMatch = Regex.Match(result, @"<div class=""sb_tlst""><h3><a href=""(?<result>[^""]*)");
+
+                    string resultMessage;
                     if (resultMatch.Success)
                     {
-                        session.Client.Send(string.Format("@{0} {1}", session.Message.User.Name, resultMatch.Groups["result"].Value), room);
+                        resultMessage = string.Format("@{0} {1}", session.Message.User.Name, resultMatch.Groups["result"].Value);
                     }
                     else
                     {
-                        session.Client.Send(string.Format("@{0} Sorry, Bing had zero results for '{1}'", session.Message.User.Name, query), query);
+                        resultMessage = string.Format("@{0} Sorry, Bing had zero results for '{1}'", session.Message.User.Name, query);
                     }
+
+                    session.Client.Send(resultMessage, room);
                 });
             });
 
@@ -50,12 +56,12 @@ namespace JibbR.Adapters
             {
                 var query = match.Groups["query"].Value;
 
-                var result = _bingClient.ImageSearch(_bingApiKey, query);
+                var result = _bingClient.ImageSearch(_settings.ApiKey, query);
 
                 if (result.StartsWith("{"))
                 {
                     var results = JObject.Parse(result);
-                    var imageUrl = results["d"]["results"].Select(x => (string)x["MediaUrl"]).RandomElement(new Random());
+                    var imageUrl = results["d"]["results"].Select(x => (string) x["MediaUrl"]).RandomElement(new Random());
 
                     session.Client.Send(imageUrl, room);
                 }

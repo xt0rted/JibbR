@@ -49,6 +49,8 @@ namespace JibbR.Shell
                     Console.Error.WriteLine(ex.ToString());
                     ex = ex.InnerException;
                 }
+
+                Console.ReadLine();
             }
 
             Console.WriteLine("Robot disconnected");

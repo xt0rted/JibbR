@@ -31,7 +31,7 @@ namespace JibbR
 
             _adaptersLoaded = true;
 
-            foreach (var adapter in _settings.Adapters)
+            foreach (var adapter in _settings.EnabledAdapters)
             {
                 Console.WriteLine("Trying to load adapter named '{0}'", adapter);
 
