@@ -71,6 +71,7 @@
     <Compile Include="Adapters\DefaultAdapter.cs" />
     <Compile Include="Adapters\IBingClient.cs" />
     <Compile Include="Adapters\KilnAdapter.cs" />
+    <Compile Include="Adapters\MathAdapter.cs" />
     <Compile Include="Annotations\ReSharper.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="IAdapterManager.cs" />
