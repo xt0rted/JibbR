@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 
 using JibbR.Adapters;
+using JibbR.Settings;
 
 using StructureMap;
 

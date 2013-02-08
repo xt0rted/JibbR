@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace JibbR
+namespace JibbR.Settings
 {
     public class SettingsManager : ISettingsManager
     {

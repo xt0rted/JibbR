@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+using JibbR.Settings;
+
 namespace JibbR
 {
     using MessageHandler = Action<ISession, string, string, Match>;

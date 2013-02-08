@@ -1,4 +1,4 @@
-﻿namespace JibbR
+﻿namespace JibbR.Settings
 {
     public interface ISettingsManager
     {

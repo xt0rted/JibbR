@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 using JabbR.Client;
 using JabbR.Client.Models;
 
+using JibbR.Settings;
+
 namespace JibbR
 {
     using MessageHandler = Action<ISession, string, string, Match>;

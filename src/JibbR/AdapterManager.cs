@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using JibbR.Settings;
+
 using StructureMap;
 
 namespace JibbR

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JibbR
+namespace JibbR.Settings
 {
     public interface IRobotSettings
     {

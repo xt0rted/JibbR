@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 
+using JibbR.Settings;
+
 using Newtonsoft.Json.Linq;
 
 namespace JibbR.Adapters

@@ -4,7 +4,7 @@ using System.Linq;
 
 using Newtonsoft.Json.Linq;
 
-namespace JibbR
+namespace JibbR.Settings
 {
     public class RobotSettings : IRobotSettings
     {

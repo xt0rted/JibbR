@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace JibbR
+namespace JibbR.Settings
 {
     public class AdapterDetails
     {
