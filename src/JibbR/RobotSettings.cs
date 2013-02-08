@@ -10,10 +10,12 @@ namespace JibbR
     {
         public RobotSettings()
         {
+            Rooms = new List<string>();
             EnabledAdapters = new List<string>();
             Adapters = new List<AdapterDetails>();
         }
 
+        public List<string> Rooms { get; set; }
         public List<string> EnabledAdapters { get; set; }
         public List<AdapterDetails> Adapters { get; set; }
 

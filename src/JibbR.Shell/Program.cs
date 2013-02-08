@@ -15,11 +15,6 @@ namespace JibbR.Shell
             var bootstrapper = new Bootstrapper();
             bootstrapper.Bootstrap();
 
-            var rooms = new[]
-            {
-                "development"
-            };
-
             var robot = bootstrapper.CreateRobot();
 
             try
@@ -27,8 +22,6 @@ namespace JibbR.Shell
                 robot.SetupClient(new Uri(host));
 
                 robot.Connect(userName, password);
-
-                robot.JoinRooms(rooms);
 
                 Task.Factory.StartNew(() =>
                 {

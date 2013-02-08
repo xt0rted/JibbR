@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace JibbR
@@ -13,8 +14,12 @@ namespace JibbR
         void SetupClient(Uri host);
         void Connect(string userName, string password);
         void Disconnect();
+
         void JoinRoom(string roomName);
-        void JoinRooms(string[] roomNames);
+        void JoinRooms(IEnumerable<string> roomNames);
+
+        void LeaveRoom(string roomName);
+        void LeaveRooms(IEnumerable<string> roomNames);
 
         void AddListener(string regex, MessageHandler function);
         void AddResponder(string regex, MessageHandler function);

@@ -13,11 +13,11 @@ namespace JibbR
 
     public class Robot : IRobot
     {
-        protected const RegexOptions DefaultRegexOptions = RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Compiled;
+        private const RegexOptions DefaultRegexOptions = RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Compiled;
 
         private readonly IAdapterManager _adapterManager;
         private JabbRClient _client;
-        private bool isSetup;
+        private bool _isSetup;
 
         private readonly List<string> _currentrooms = new List<string>();
 
@@ -33,6 +33,7 @@ namespace JibbR
         }
 
         public string Name { get; private set; }
+
         public IRobotSettings Settings { get; private set; }
 
         private void ClientOnMessageReceived(Message message, string room)
@@ -121,13 +122,13 @@ namespace JibbR
 
         public void SetupClient(Uri host)
         {
-            if (isSetup)
+            if (_isSetup)
             {
                 Console.Error.WriteLine("Client is already setup.");
                 return;
             }
 
-            isSetup = true;
+            _isSetup = true;
 
             _client = new JabbRClient(host);
 
@@ -140,7 +141,16 @@ namespace JibbR
         public void Connect(string userName, string password)
         {
             Name = userName;
-            _client.Connect(userName, password).Wait();
+
+            var currentInfo = _client.Connect(userName, password).Result;
+
+            // check if we're in rooms we shouldn't be, and leave them if we are
+            var roomsToLeave = currentInfo.Rooms.Select(r => r.Name).Except(Settings.Rooms);
+            LeaveRooms(roomsToLeave);
+
+            // join any rooms we're not already in
+            var roomsToJoin = Settings.Rooms.Except(currentInfo.Rooms.Select(r => r.Name));
+            JoinRooms(roomsToJoin);
         }
 
         public void Disconnect()
@@ -153,15 +163,33 @@ namespace JibbR
 
         public void JoinRoom(string roomName)
         {
+            Console.WriteLine("joining room '{0}'", roomName);
             _client.JoinRoom(roomName)
                    .ContinueWith(_ => _currentrooms.Add(roomName))
                    .Wait();
         }
-        public void JoinRooms(string[] roomNames)
+
+        public void JoinRooms(IEnumerable<string> roomNames)
         {
             foreach (var roomName in roomNames)
             {
                 JoinRoom(roomName);
+            }
+        }
+
+        public void LeaveRoom(string roomName)
+        {
+            Console.WriteLine("leaving room '{0}'", roomName);
+            _client.LeaveRoom(roomName)
+                   .ContinueWith(_ => _currentrooms.Add(roomName))
+                   .Wait();
+        }
+
+        public void LeaveRooms(IEnumerable<string> roomNames)
+        {
+            foreach (var roomName in roomNames)
+            {
+                LeaveRoom(roomName);
             }
         }
 
