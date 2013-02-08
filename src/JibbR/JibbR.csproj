@@ -61,7 +61,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdapterDetails.cs" />
     <Compile Include="AdapterManager.cs" />
     <Compile Include="AdapterScanner.cs" />
     <Compile Include="Adapters\BingWebAdapter.cs" />
@@ -77,16 +76,17 @@
     <Compile Include="IAdapterManager.cs" />
     <Compile Include="IRobot.cs" />
     <Compile Include="IRobotAdapter.cs" />
-    <Compile Include="IRobotSettings.cs" />
     <Compile Include="ISession.cs" />
-    <Compile Include="ISettingsManager.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Robot.cs" />
     <Compile Include="RobotAdapterMetadataAttribute.cs" />
-    <Compile Include="RobotSettings.cs" />
     <Compile Include="Session.cs" />
-    <Compile Include="SettingsManager.cs" />
+    <Compile Include="Settings\AdapterDetails.cs" />
+    <Compile Include="Settings\IRobotSettings.cs" />
+    <Compile Include="Settings\ISettingsManager.cs" />
+    <Compile Include="Settings\RobotSettings.cs" />
+    <Compile Include="Settings\SettingsManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
