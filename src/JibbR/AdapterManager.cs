@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
-using JibbR.Settings;
+using System.Linq;
 
 using StructureMap;
 
@@ -10,14 +9,12 @@ namespace JibbR
     public class AdapterManager : IAdapterManager
     {
         private readonly IContainer _container;
-        private readonly IRobotSettings _settings;
 
         private bool _adaptersLoaded;
 
-        public AdapterManager(IContainer container, ISettingsManager settingsManager)
+        public AdapterManager(IContainer container)
         {
             _container = container;
-            _settings = settingsManager.LoadSettings();
 
             Adapters = new List<IRobotAdapter>();
         }
@@ -33,7 +30,7 @@ namespace JibbR
 
             _adaptersLoaded = true;
 
-            foreach (var adapter in _settings.EnabledAdapters)
+            foreach (var adapter in robot.Settings.Adapters.Where(a => a.Enabled).Select(a => a.Name))
             {
                 Console.WriteLine("Trying to load adapter named '{0}'", adapter);
 

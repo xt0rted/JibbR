@@ -3,8 +3,9 @@
     public interface ISettingsManager
     {
         string SettingsPath { get; }
+        IRobotSettings Settings { get; }
 
-        void CreateDefaultSettingsFile();
-        IRobotSettings LoadSettings();
+        void LoadSettings();
+        void SaveSettings();
     }
 }

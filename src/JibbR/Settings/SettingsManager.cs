@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using System.Text;
 
 using Newtonsoft.Json;
 
@@ -6,17 +7,14 @@ namespace JibbR.Settings
 {
     public class SettingsManager : ISettingsManager
     {
+        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+
         private readonly IFileSystem _fileSystem;
         private string _settingsPath;
 
         public SettingsManager(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
-
-            if (!_fileSystem.File.Exists(SettingsPath))
-            {
-                CreateDefaultSettingsFile();
-            }
         }
 
         public string SettingsPath
@@ -34,20 +32,18 @@ namespace JibbR.Settings
             }
         }
 
-        public void CreateDefaultSettingsFile()
-        {
-            IRobotSettings settings = new RobotSettings();
+        public IRobotSettings Settings { get; private set; }
 
-            var json = JsonConvert.SerializeObject(settings, Formatting.Indented);
-
-            _fileSystem.File.WriteAllText(SettingsPath, json);
-        }
-
-        public IRobotSettings LoadSettings()
+        public void LoadSettings()
         {
             var json = _fileSystem.File.ReadAllText(SettingsPath);
-            var settings = JsonConvert.DeserializeObject<RobotSettings>(json);
-            return settings;
+            Settings = JsonConvert.DeserializeObject<RobotSettings>(json, SerializerSettings);
+        }
+
+        public void SaveSettings()
+        {
+            var json = JsonConvert.SerializeObject(Settings, Formatting.Indented, SerializerSettings);
+            _fileSystem.File.WriteAllText(SettingsPath, json, new UTF8Encoding(false));
         }
     }
 }

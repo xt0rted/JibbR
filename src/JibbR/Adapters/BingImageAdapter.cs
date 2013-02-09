@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 
-using JibbR.Settings;
-
 using Newtonsoft.Json.Linq;
 
 namespace JibbR.Adapters
@@ -11,34 +9,33 @@ namespace JibbR.Adapters
     public class BingImageAdapter : IRobotAdapter
     {
         private readonly IBingClient _bingClient;
-        private readonly BingAdapterSettings _settings;
 
-        public BingImageAdapter(ISettingsManager settingsManager, IBingClient bingClient)
+        public BingImageAdapter(IBingClient bingClient)
         {
             _bingClient = bingClient;
-
-            _settings = settingsManager.LoadSettings()
-                                       .For<BingImageAdapter>()
-                                       .ToObject<BingAdapterSettings>();
-
-            if (string.IsNullOrWhiteSpace(_settings.ApiKey))
-            {
-                Console.Error.WriteLine("No API key was found for bing. If you do not have one you can get one by signing up here http://www.bing.com/developers/");
-            }
         }
 
         public void Setup(IRobot robot)
         {
+            var settings = robot.Settings.SettingsFor<BingImageAdapter>();
+
+            // for now there's no point in registering this listener if there's no api key
+            if (string.IsNullOrWhiteSpace((string) settings.Settings.ApiKey))
+            {
+                Console.Error.WriteLine("No API key was found for bing image search. If you do not have one you can get one by signing up here http://www.bing.com/developers/");
+                return;
+            }
+
             robot.AddListener(@"^(bing )?image( me)? (?<query>.*)", (session, message, room, match) =>
             {
                 var query = match.Groups["query"].Value;
 
-                var result = _bingClient.ImageSearch(_settings.ApiKey, query);
+                var result = _bingClient.ImageSearch((string) settings.Settings.ApiKey, query);
 
                 if (result.StartsWith("{"))
                 {
                     var results = JObject.Parse(result);
-                    var imageUrl = results["d"]["results"].Select(x => (string)x["MediaUrl"]).RandomElement(new Random());
+                    var imageUrl = results["d"]["results"].Select(x => (string) x["MediaUrl"]).RandomElement(new Random());
 
                     session.Client.Send(imageUrl, room);
                 }

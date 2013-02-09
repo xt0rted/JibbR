@@ -18,6 +18,7 @@ namespace JibbR
         private const RegexOptions DefaultRegexOptions = RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Compiled;
 
         private readonly IAdapterManager _adapterManager;
+        private readonly ISettingsManager _settingsManager;
         private JabbRClient _client;
         private bool _isSetup;
 
@@ -30,13 +31,14 @@ namespace JibbR
         public Robot(IAdapterManager adapterManager, ISettingsManager settingsManager)
         {
             _adapterManager = adapterManager;
+            _settingsManager = settingsManager;
 
-            Settings = settingsManager.LoadSettings();
+            settingsManager.LoadSettings();
         }
 
         public string Name { get; private set; }
 
-        public IRobotSettings Settings { get; private set; }
+        public IRobotSettings Settings { get { return _settingsManager.Settings; } }
 
         private void ClientOnMessageReceived(Message message, string room)
         {
@@ -161,6 +163,8 @@ namespace JibbR
             _currentrooms.Clear();
 
             _client.LogOut().ContinueWith(_ => _client.Disconnect()).Wait();
+
+            _settingsManager.SaveSettings();
         }
 
         public void JoinRoom(string roomName)

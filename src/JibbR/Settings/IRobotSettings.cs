@@ -4,11 +4,10 @@ namespace JibbR.Settings
 {
     public interface IRobotSettings
     {
-        List<string> Rooms { get; set; }
-        List<string> EnabledAdapters { get; set; }
-        List<AdapterDetails> Adapters { get; set; }
+        IList<string> Rooms { get; set; }
+        IList<AdapterDetails> Adapters { get; set; }
 
-        dynamic For<TAdapter>() where TAdapter : IRobotAdapter;
-        dynamic For(string adapterName);
+        AdapterDetails SettingsFor<T>() where T : IRobotAdapter;
+        AdapterDetails SettingsFor(string adapterName);
     }
 }

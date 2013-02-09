@@ -11,38 +11,34 @@ namespace JibbR.Settings
         public RobotSettings()
         {
             Rooms = new List<string>();
-            EnabledAdapters = new List<string>();
             Adapters = new List<AdapterDetails>();
         }
 
-        public List<string> Rooms { get; set; }
-        public List<string> EnabledAdapters { get; set; }
-        public List<AdapterDetails> Adapters { get; set; }
+        public IList<string> Rooms { get; set; }
+        public IList<AdapterDetails> Adapters { get; set; }
 
-        public dynamic For<TAdapter>() where TAdapter : IRobotAdapter
+        public AdapterDetails SettingsFor<TAdapter>() where TAdapter : IRobotAdapter
         {
             var metadata = typeof (TAdapter).GetCustomAttributes(typeof (RobotAdapterMetadataAttribute), false);
             var data = (RobotAdapterMetadataAttribute) metadata[0];
 
             var name = data.GetAdapterName();
-            return For(name);
+            return SettingsFor(name);
         }
 
-        public dynamic For(string adapterName)
+        public AdapterDetails SettingsFor(string adapterName)
         {
-            var settings = Adapters.SingleOrDefault(a => string.Equals(a.Name, adapterName, StringComparison.OrdinalIgnoreCase));
-            if (settings == null)
+            var details = Adapters.SingleOrDefault(a => string.Equals(a.Name, adapterName, StringComparison.OrdinalIgnoreCase));
+            if (details == null)
             {
-                settings = new AdapterDetails
+                details = new AdapterDetails
                 {
                     Name = adapterName,
                     Settings = new JObject()
                 };
-
-                Adapters.Add(settings);
             }
 
-            return settings.Settings;
+            return details;
         }
     }
 }
