@@ -22,7 +22,7 @@ namespace JibbR
         private JabbRClient _client;
         private bool _isSetup;
 
-        private readonly List<string> _currentrooms = new List<string>();
+        private readonly List<string> _currentRooms = new List<string>();
 
         private readonly Dictionary<string, MessageHandler> _listenerHandlers = new Dictionary<string, MessageHandler>();
         private readonly Dictionary<string, MessageHandler> _responderHandlers = new Dictionary<string, MessageHandler>();
@@ -159,8 +159,7 @@ namespace JibbR
 
         public void Disconnect()
         {
-            System.Threading.Tasks.Task.WaitAll(_currentrooms.Select(room => _client.LeaveRoom(room)).ToArray());
-            _currentrooms.Clear();
+            LeaveRooms(_currentRooms);
 
             _client.LogOut().ContinueWith(_ => _client.Disconnect()).Wait();
 
@@ -171,7 +170,7 @@ namespace JibbR
         {
             Console.WriteLine("joining room '{0}'", roomName);
             _client.JoinRoom(roomName)
-                   .ContinueWith(_ => _currentrooms.Add(roomName))
+                   .ContinueWith(_ => _currentRooms.Add(roomName))
                    .Wait();
         }
 
@@ -187,13 +186,14 @@ namespace JibbR
         {
             Console.WriteLine("leaving room '{0}'", roomName);
             _client.LeaveRoom(roomName)
-                   .ContinueWith(_ => _currentrooms.Add(roomName))
+                   .ContinueWith(_ => _currentRooms.Remove(roomName))
                    .Wait();
         }
 
         public void LeaveRooms(IEnumerable<string> roomNames)
         {
-            foreach (var roomName in roomNames)
+            // gotta reverse the rooms since we remove each one from the current room list in LeaveRoom()
+            foreach (var roomName in roomNames.Reverse())
             {
                 LeaveRoom(roomName);
             }
