@@ -16,6 +16,7 @@ namespace JibbR
         void SetupClient(Uri host);
         void Connect(string userName, string password);
         void Disconnect();
+        void HeartBeat();
 
         void JoinRoom(string roomName);
         void JoinRooms(IEnumerable<string> roomNames);

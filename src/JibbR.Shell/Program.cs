@@ -17,11 +17,19 @@ namespace JibbR.Shell
 
             var robot = bootstrapper.CreateRobot();
 
+            Timer heartBeat = null;
             try
             {
                 robot.SetupClient(new Uri(host));
 
                 robot.Connect(userName, password);
+
+                // jabbr sets you idle after > 15 minutes so we need to run faster than that
+                heartBeat = new Timer(state =>
+                {
+                    var bot = (IRobot) state;
+                    bot.HeartBeat();
+                }, robot, TimeSpan.FromMinutes(13), TimeSpan.FromMinutes(13));
 
                 Task.Factory.StartNew(() =>
                 {
@@ -31,10 +39,16 @@ namespace JibbR.Shell
                     });
                 }).Wait();
 
+                heartBeat.Dispose();
                 robot.Disconnect();
             }
             catch (Exception ex)
             {
+                if (heartBeat != null)
+                {
+                    heartBeat.Dispose();
+                }
+
                 Console.Error.WriteLine("error while running");
 
                 while (ex != null)

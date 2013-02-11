@@ -230,6 +230,15 @@ namespace JibbR
             _settingsManager.SaveSettings();
         }
 
+        public void HeartBeat()
+        {
+            var room = _currentRooms.FirstOrDefault();
+            if (room != null)
+            {
+                _client.SetTyping(room);
+            }
+        }
+
         public void JoinRoom(string roomName)
         {
             Console.WriteLine("joining room '{0}'", roomName);
