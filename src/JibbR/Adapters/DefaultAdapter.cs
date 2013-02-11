@@ -50,7 +50,7 @@ namespace JibbR.Adapters
                 var where = string.Empty;
 
                 List<string> rooms;
-                if (session.KnownUsers.TryGetValue(who, out rooms))
+                if (robot.Settings.KnownUsers.TryGetValue(who, out rooms))
                 {
                     where = string.Join(", #", rooms);
                 }

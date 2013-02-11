@@ -11,6 +11,5 @@ namespace JibbR
         JabbRClient Client { get; }
         Message Message { get; }
         string BotName { get; }
-        ConcurrentDictionary<string, List<string>> KnownUsers { get; }
     }
 }

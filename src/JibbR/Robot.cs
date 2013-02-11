@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -24,7 +23,6 @@ namespace JibbR
         private bool _isSetup;
 
         private readonly List<string> _currentRooms = new List<string>();
-        private readonly ConcurrentDictionary<string, List<string>> _currentUsers = new ConcurrentDictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
         private readonly Dictionary<string, MessageHandler> _listenerHandlers = new Dictionary<string, MessageHandler>();
         private readonly Dictionary<string, MessageHandler> _responderHandlers = new Dictionary<string, MessageHandler>();
@@ -46,7 +44,7 @@ namespace JibbR
         {
             List<string> rooms;
             var isUpdating = true;
-            if (!_currentUsers.TryGetValue(user.Name, out rooms))
+            if (!Settings.KnownUsers.TryGetValue(user.Name, out rooms))
             {
                 isUpdating = false;
                 rooms = new List<string>();
@@ -62,14 +60,14 @@ namespace JibbR
 
             if (!isUpdating)
             {
-                _currentUsers.TryAdd(user.Name, rooms);
+                Settings.KnownUsers.TryAdd(user.Name, rooms);
             }
         }
 
         private void ClientOnUserLeft(User user, string room)
         {
             List<string> rooms;
-            if (!_currentUsers.TryGetValue(user.Name, out rooms))
+            if (!Settings.KnownUsers.TryGetValue(user.Name, out rooms))
             {
                 return;
             }
@@ -81,7 +79,7 @@ namespace JibbR
                 return;
             }
 
-            if (!_currentUsers.TryRemove(user.Name, out rooms))
+            if (!Settings.KnownUsers.TryRemove(user.Name, out rooms))
             {
                 Console.Error.WriteLine("There was an error removing '{0}' from the user list.", user.Name);
             }
@@ -98,7 +96,7 @@ namespace JibbR
             Console.WriteLine("message received");
             var match = Regex.Match(message.Content, string.Format(@"^(?<name>@?{0}\b)\s+(?<message>\b.*\b)", Name), DefaultRegexOptions);
 
-            ISession session = new Session(_client, message, Name, _currentUsers);
+            ISession session = new Session(_client, message, Name);
 
             Dictionary<string, MessageHandler> handlers;
             string messageBody;
@@ -133,7 +131,7 @@ namespace JibbR
 
             Console.WriteLine("private message received");
 
-            ISession session = new Session(_client, null, Name, _currentUsers);
+            ISession session = new Session(_client, null, Name);
 
             foreach (var handler in _privateResponderHandlers)
             {
@@ -211,14 +209,14 @@ namespace JibbR
                 foreach (var user in roomInfo.Users)
                 {
                     List<string> rooms;
-                    if (!_currentUsers.TryGetValue(user.Name, out rooms))
+                    if (!Settings.KnownUsers.TryGetValue(user.Name, out rooms))
                     {
                         rooms = new List<string>();
                     }
 
                     rooms.Add(room);
 
-                    _currentUsers[user.Name] = rooms;
+                    Settings.KnownUsers[user.Name] = rooms;
                 }
             }
         }

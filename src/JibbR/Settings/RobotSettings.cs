@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace JibbR.Settings
@@ -12,10 +14,14 @@ namespace JibbR.Settings
         {
             Rooms = new List<string>();
             Adapters = new List<AdapterDetails>();
+            KnownUsers = new ConcurrentDictionary<string, List<string>>();
         }
 
         public IList<string> Rooms { get; set; }
         public IList<AdapterDetails> Adapters { get; set; }
+
+        [JsonIgnore]
+        public ConcurrentDictionary<string, List<string>> KnownUsers { get; private set; }
 
         public AdapterDetails SettingsFor<TAdapter>() where TAdapter : IRobotAdapter
         {
