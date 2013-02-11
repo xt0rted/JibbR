@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -23,6 +24,7 @@ namespace JibbR
         private bool _isSetup;
 
         private readonly List<string> _currentRooms = new List<string>();
+        private readonly ConcurrentDictionary<string, List<string>> _currentUsers = new ConcurrentDictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
         private readonly Dictionary<string, MessageHandler> _listenerHandlers = new Dictionary<string, MessageHandler>();
         private readonly Dictionary<string, MessageHandler> _responderHandlers = new Dictionary<string, MessageHandler>();
@@ -40,6 +42,51 @@ namespace JibbR
 
         public IRobotSettings Settings { get { return _settingsManager.Settings; } }
 
+        private void ClientOnUserJoined(User user, string room, bool isOwner)
+        {
+            List<string> rooms;
+            var isUpdating = true;
+            if (!_currentUsers.TryGetValue(user.Name, out rooms))
+            {
+                isUpdating = false;
+                rooms = new List<string>();
+            }
+
+            if (rooms.Contains(room))
+            {
+                // no need to track them, for some reason we already are
+                return;
+            }
+
+            rooms.Add(room);
+
+            if (!isUpdating)
+            {
+                _currentUsers.TryAdd(user.Name, rooms);
+            }
+        }
+
+        private void ClientOnUserLeft(User user, string room)
+        {
+            List<string> rooms;
+            if (!_currentUsers.TryGetValue(user.Name, out rooms))
+            {
+                return;
+            }
+
+            rooms.Remove(room);
+
+            if (rooms.Count != 0)
+            {
+                return;
+            }
+
+            if (!_currentUsers.TryRemove(user.Name, out rooms))
+            {
+                Console.Error.WriteLine("There was an error removing '{0}' from the user list.", user.Name);
+            }
+        }
+
         private void ClientOnMessageReceived(Message message, string room)
         {
             // we never want to respond to ourself...
@@ -51,7 +98,7 @@ namespace JibbR
             Console.WriteLine("message received");
             var match = Regex.Match(message.Content, string.Format(@"^(?<name>@?{0}\b)\s+(?<message>\b.*\b)", Name), DefaultRegexOptions);
 
-            ISession session = new Session(_client, message, Name);
+            ISession session = new Session(_client, message, Name, _currentUsers);
 
             Dictionary<string, MessageHandler> handlers;
             string messageBody;
@@ -86,7 +133,7 @@ namespace JibbR
 
             Console.WriteLine("private message received");
 
-            ISession session = new Session(_client, null, Name);
+            ISession session = new Session(_client, null, Name, _currentUsers);
 
             foreach (var handler in _privateResponderHandlers)
             {
@@ -138,6 +185,8 @@ namespace JibbR
 
             _client.MessageReceived += ClientOnMessageReceived;
             _client.PrivateMessage += ClientOnPrivateMessage;
+            _client.UserJoined += ClientOnUserJoined;
+            _client.UserLeft += ClientOnUserLeft;
 
             _adapterManager.SetupAdapters(this);
         }
@@ -155,6 +204,23 @@ namespace JibbR
             // join any rooms we're not already in
             var roomsToJoin = Settings.Rooms.Except(currentInfo.Rooms.Select(r => r.Name));
             JoinRooms(roomsToJoin);
+
+            foreach (var room in _currentRooms)
+            {
+                var roomInfo = _client.GetRoomInfo(room).Result;
+                foreach (var user in roomInfo.Users)
+                {
+                    List<string> rooms;
+                    if (!_currentUsers.TryGetValue(user.Name, out rooms))
+                    {
+                        rooms = new List<string>();
+                    }
+
+                    rooms.Add(room);
+
+                    _currentUsers[user.Name] = rooms;
+                }
+            }
         }
 
         public void Disconnect()

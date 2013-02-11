@@ -1,4 +1,6 @@
-﻿namespace JibbR.Adapters
+﻿using System.Collections.Generic;
+
+namespace JibbR.Adapters
 {
     [RobotAdapterMetadata("default-adapter")]
     public class DefaultAdapter : IRobotAdapter
@@ -31,6 +33,33 @@
                 {
                     session.Client.SendPrivateMessage(from, "new flag set");
                 });
+            });
+
+            robot.AddPrivateResponder(@"where (?:are you|is (?<who>.*))\b\?*", (session, message, from, match) =>
+            {
+                var who = match.Groups["who"].Value;
+
+                var toSay = "{0} is in #{1}";
+
+                if (string.IsNullOrWhiteSpace(who))
+                {
+                    who = session.BotName;
+                    toSay = "I'm in #{1}";
+                }
+
+                var where = string.Empty;
+
+                List<string> rooms;
+                if (session.KnownUsers.TryGetValue(who, out rooms))
+                {
+                    where = string.Join(", #", rooms);
+                }
+                else
+                {
+                    toSay = "I can't find {0}";
+                }
+
+                session.Client.SendPrivateMessage(from, string.Format(toSay, who, where));
             });
         }
     }
