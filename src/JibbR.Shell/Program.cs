@@ -6,6 +6,8 @@ namespace JibbR.Shell
 {
     class Program
     {
+        private static readonly TimeSpan Pulse = TimeSpan.FromMinutes(13);
+
         static void Main(string[] args)
         {
             var host = System.Configuration.ConfigurationManager.AppSettings["jibbr:host"];
@@ -24,12 +26,8 @@ namespace JibbR.Shell
 
                 robot.Connect(userName, password);
 
-                // jabbr sets you idle after > 15 minutes so we need to run faster than that
-                heartBeat = new Timer(state =>
-                {
-                    var bot = (IRobot) state;
-                    bot.HeartBeat();
-                }, robot, TimeSpan.FromMinutes(13), TimeSpan.FromMinutes(13));
+                // jabbr sets you idle after 15+ minutes so we need to run faster than that
+                heartBeat = new Timer(_ => robot.HeartBeat(), null, Pulse, Pulse);
 
                 Task.Factory.StartNew(() =>
                 {
