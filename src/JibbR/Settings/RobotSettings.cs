@@ -14,7 +14,7 @@ namespace JibbR.Settings
         {
             Rooms = new List<string>();
             Adapters = new List<AdapterDetails>();
-            KnownUsers = new ConcurrentDictionary<string, List<string>>();
+            KnownUsers = new ConcurrentDictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
         }
 
         public IList<string> Rooms { get; set; }
