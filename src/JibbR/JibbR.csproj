@@ -67,6 +67,7 @@
     <Compile Include="Adapters\BingClient.cs" />
     <Compile Include="Adapters\BingImageAdapter.cs" />
     <Compile Include="Adapters\DefaultAdapter.cs" />
+    <Compile Include="Adapters\GitHubAdapter.cs" />
     <Compile Include="Adapters\IBingClient.cs" />
     <Compile Include="Adapters\KilnAdapter.cs" />
     <Compile Include="Adapters\MathAdapter.cs" />
