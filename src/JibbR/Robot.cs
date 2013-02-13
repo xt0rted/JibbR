@@ -195,6 +195,8 @@ namespace JibbR
 
             var currentInfo = _client.Connect(userName, password).Result;
 
+            _currentRooms.AddRange(currentInfo.Rooms.Select(r => r.Name));
+
             // check if we're in rooms we shouldn't be, and leave them if we are
             var roomsToLeave = currentInfo.Rooms.Select(r => r.Name).Except(Settings.Rooms);
             LeaveRooms(roomsToLeave);
