@@ -5,6 +5,14 @@ namespace JibbR
 {
     public static class Helpers
     {
+        public static void DisposeSafely(this IDisposable source)
+        {
+            if (source != null)
+            {
+                source.Dispose();
+            }
+        }
+
         // http://stackoverflow.com/a/648240/39605
         public static T RandomElement<T>(this IEnumerable<T> source, Random random)
         {
