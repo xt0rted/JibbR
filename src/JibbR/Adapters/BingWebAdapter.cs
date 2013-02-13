@@ -2,7 +2,7 @@
 
 namespace JibbR.Adapters
 {
-    [RobotAdapterMetadata("bing-web-adapter")]
+    [AdapterName("bing-web-adapter")]
     public class BingWebAdapter : IRobotAdapter
     {
         private readonly IBingClient _bingClient;

@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace JibbR.Adapters
 {
-    [RobotAdapterMetadata("bing-image-adapter")]
+    [AdapterName("bing-image-adapter")]
     public class BingImageAdapter : IRobotAdapter
     {
         private readonly IBingClient _bingClient;

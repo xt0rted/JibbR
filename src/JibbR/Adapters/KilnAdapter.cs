@@ -1,7 +1,7 @@
 ﻿// Note: none of these actually do anything... they're just stubs for testing at the moment
 namespace JibbR.Adapters
 {
-    [RobotAdapterMetadata("kiln-adapter")]
+    [AdapterName("kiln-adapter")]
     public class KilnAdapter : IRobotAdapter
     {
         public void Setup(IRobot robot)

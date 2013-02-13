@@ -25,10 +25,10 @@ namespace JibbR.Settings
 
         public AdapterDetails SettingsFor<TAdapter>() where TAdapter : IRobotAdapter
         {
-            var metadata = typeof (TAdapter).GetCustomAttributes(typeof (RobotAdapterMetadataAttribute), false);
-            var data = (RobotAdapterMetadataAttribute) metadata[0];
+            var attributes = typeof (TAdapter).GetCustomAttributes(typeof (AdapterNameAttribute), false);
+            var attribute = (AdapterNameAttribute) attributes[0];
 
-            var name = data.GetAdapterName();
+            var name = attribute.Name;
             return SettingsFor(name);
         }
 

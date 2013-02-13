@@ -2,7 +2,7 @@
 
 namespace JibbR.Adapters
 {
-    [RobotAdapterMetadata("default-adapter")]
+    [AdapterName("default-adapter")]
     public class DefaultAdapter : IRobotAdapter
     {
         public void Setup(IRobot robot)

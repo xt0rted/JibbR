@@ -8,7 +8,7 @@ using RestSharp;
 
 namespace JibbR.Adapters
 {
-    [RobotAdapterMetadata("github-adapter")]
+    [AdapterName("github-adapter")]
     public class GitHubAdapter : IRobotAdapter
     {
         private const string GitHubApiUrl = "https://status.github.com/api";

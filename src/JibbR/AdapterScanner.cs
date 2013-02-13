@@ -16,15 +16,15 @@ namespace JibbR
                 return;
             }
 
-            var attributes = type.GetCustomAttributes(typeof (RobotAdapterMetadataAttribute), false);
+            var attributes = type.GetCustomAttributes(typeof (AdapterNameAttribute), false);
             if (attributes.Length < 1)
             {
                 Console.WriteLine("Type '{0}' is missing metadata, will be skipped.", type.Name);
                 return;
             }
 
-            var attribute = (RobotAdapterMetadataAttribute) attributes[0];
-            var name = attribute.GetAdapterName();
+            var attribute = (AdapterNameAttribute) attributes[0];
+            var name = attribute.Name;
 
             registry.AddType(typeof (IRobotAdapter), type, name);
         }

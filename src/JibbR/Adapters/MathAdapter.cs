@@ -6,7 +6,7 @@ using RestSharp;
 
 namespace JibbR.Adapters
 {
-    [RobotAdapterMetadata("math-adapter")]
+    [AdapterName("math-adapter")]
     public class MathAdapter : IRobotAdapter
     {
         public void Setup(IRobot robot)
