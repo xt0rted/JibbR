@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System;
+using System.IO.Abstractions;
 using System.Text;
 
 using Newtonsoft.Json;
@@ -23,9 +24,7 @@ namespace JibbR.Settings
             {
                 if (_settingsPath == null)
                 {
-                    //var path = _fileSystem.Directory.GetCurrentDirectory();
-                    //_settingsPath = _fileSystem.Path.Combine(path, "jibbr.json");
-                    _settingsPath = "jibbr.json";
+                    _settingsPath = _fileSystem.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jibbr.json");
                 }
 
                 return _settingsPath;
