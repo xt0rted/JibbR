@@ -28,7 +28,7 @@ namespace JibbR.Adapters
 
             robot.AddListener(@"^(bing )?image( me)? (?<query>.*)", (session, message, room, match) =>
             {
-                var query = match.Groups["query"].Value;
+                var query = match.ValueFor("query");
 
                 var result = _bingClient.ImageSearch((string) settings.Settings.ApiKey, query);
 

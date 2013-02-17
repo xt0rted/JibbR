@@ -17,27 +17,25 @@ namespace JibbR.Adapters
                 robot.SendMessage(room, "@{0} I got no time for the jibber-jabber!", session.Message.User.Name);
             });
 
-            robot.AddPrivateResponder(@"note:\s*(?<note>.*)$", (session, message, from, match) =>
+            robot.AddPrivateResponder(@"note (?<note>.*)$", (session, message, from, match) =>
             {
-                var note = match.Groups["note"].Value;
-                session.Client.SetNote(note).ContinueWith(task =>
-                {
-                    session.Client.SendPrivateMessage(from, "new note set");
-                });
+                // ToDo: add permission check
+                var note = match.ValueFor("note");
+
+                robot.SetNote(note);
             });
 
-            robot.AddPrivateResponder(@"flag:\s*(?<flag>.*)$", (session, message, from, match) =>
+            robot.AddPrivateResponder(@"flag (?<country>.*)$", (session, message, from, match) =>
             {
-                var flag = match.Groups["flag"].Value;
-                session.Client.SetFlag(flag).ContinueWith(task =>
-                {
-                    session.Client.SendPrivateMessage(from, "new flag set");
-                });
+                // ToDo: add permission check
+                var countryCode = match.ValueFor("country");
+
+                robot.SetFlag(countryCode);
             });
 
             robot.AddPrivateResponder(@"where (?:are you|is (?<who>.*))\b\?*", (session, message, from, match) =>
             {
-                var who = match.Groups["who"].Value;
+                var who = match.ValueFor("who");
 
                 var toSay = "{0} is in #{1}";
 
@@ -59,7 +57,7 @@ namespace JibbR.Adapters
                     toSay = "I can't find {0}";
                 }
 
-                session.Client.SendPrivateMessage(from, string.Format(toSay, who, where));
+                robot.SendPrivateMessage(from, toSay, who, where);
             });
         }
     }

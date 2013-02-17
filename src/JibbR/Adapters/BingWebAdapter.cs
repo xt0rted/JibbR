@@ -19,7 +19,7 @@ namespace JibbR.Adapters
             {
                 Task.Factory.StartNew(() =>
                 {
-                    var query = match.Groups["query"].Value;
+                    var query = match.ValueFor("query");
 
                     var result = _bingClient.WebSearch(query);
 
@@ -28,7 +28,7 @@ namespace JibbR.Adapters
                     string resultMessage;
                     if (resultMatch.Success)
                     {
-                        resultMessage = string.Format("@{0} {1}", session.Message.User.Name, resultMatch.Groups["result"].Value);
+                        resultMessage = string.Format("@{0} {1}", session.Message.User.Name, resultMatch.ValueFor("result"));
                     }
                     else
                     {

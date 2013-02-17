@@ -17,7 +17,7 @@ namespace JibbR.Web.Modules
             {
                 string time = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
-                eventBus.Push(new JabbrMessage
+                eventBus.Push(new JabbrMessage(MessageType.Basic)
                 {
                     Room = "development",
                     Message = string.Format("It is now {0}", time)

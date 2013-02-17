@@ -30,5 +30,8 @@ namespace JibbR
         void AddPrivateResponder(string regex, MessageHandler function);
 
         void SendMessage(string room, string message, params object[] args);
+        void SendPrivateMessage(string to, string message, params object[] args);
+        void SetFlag(string country);
+        void SetNote(string note);
     }
 }

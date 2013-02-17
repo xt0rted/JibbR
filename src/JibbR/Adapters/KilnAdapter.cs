@@ -8,17 +8,17 @@ namespace JibbR.Adapters
         {
             robot.AddResponder(@"push\s+(?<project>.*)\s+from\s+(?<from>.*)\s+to\s+(?<to>.*)", (session, message, room, match) =>
             {
-                var project = match.Groups["project"].Value;
-                var from = match.Groups["from"].Value;
-                var to = match.Groups["to"].Value;
+                var project = match.ValueFor("project");
+                var from = match.ValueFor("from");
+                var to = match.ValueFor("to");
 
                 robot.SendMessage(room, "{0} was just pushed from ({1}) to ({2}) successfully.", project, from, to);
             });
 
             robot.AddResponder(@"push-alias\s+(?<from>.*)\s+is\s+(?<to>.*)", (session, message, room, match) =>
             {
-                var from = match.Groups["from"].Value;
-                var to = match.Groups["to"].Value;
+                var from = match.ValueFor("from");
+                var to = match.ValueFor("to");
 
                 robot.SendMessage(room, "({0}) is now an alis for ({1})", from, to);
             });

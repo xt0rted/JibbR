@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace JibbR
 {
@@ -34,6 +35,11 @@ namespace JibbR
             }
 
             return current;
+        }
+
+        public static string ValueFor(this Match match, string group)
+        {
+            return match.Groups[group].Value;
         }
     }
 }

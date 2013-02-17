@@ -15,7 +15,7 @@ namespace JibbR.Adapters
             {
                 Task.Factory.StartNew(() =>
                 {
-                    var query = match.Groups["query"].Value;
+                    var query = match.ValueFor("query");
 
                     var restClient = new RestClient(@"https://www.google.com/ig/calculator");
 

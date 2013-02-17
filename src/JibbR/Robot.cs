@@ -99,14 +99,14 @@ namespace JibbR
             Console.WriteLine("message received");
             var match = Regex.Match(message.Content, string.Format(@"^(?<name>@?{0}\b)\s+(?<message>\b.*\b)", Name), DefaultRegexOptions);
 
-            ISession session = new Session(_client, message, Name);
+            ISession session = new Session(message, Name);
 
             Dictionary<string, MessageHandler> handlers;
             string messageBody;
             if (match.Success)
             {
                 handlers = _responderHandlers;
-                messageBody = match.Groups["message"].Value;
+                messageBody = match.ValueFor("message");
             }
             else
             {
@@ -134,7 +134,7 @@ namespace JibbR
 
             Console.WriteLine("private message received");
 
-            ISession session = new Session(_client, null, Name);
+            ISession session = new Session(null, Name);
 
             foreach (var handler in _privateResponderHandlers)
             {
@@ -297,16 +297,47 @@ namespace JibbR
 
         public void SendMessage(string room, string message, params object[] args)
         {
-            _eventBus.Push(new JabbrMessage
+            _eventBus.Push(new JabbrMessage(MessageType.Basic)
             {
                 Room = room,
                 Message = string.Format(message, args)
             });
         }
 
+        public void SendPrivateMessage(string to, string message, params object[] args)
+        {
+            _eventBus.Push(new JabbrMessage(MessageType.Private)
+            {
+                To = to,
+                Message = string.Format(message, args)
+            });
+        }
+
+        public void SetFlag(string countryCode)
+        {
+            _client.SetFlag(countryCode);
+        }
+
+        public void SetNote(string note)
+        {
+            _client.SetNote(note);
+        }
+
         public void DoSendMessage(JabbrMessage message)
         {
-            _client.Send(message.Message, message.Room);
+            switch(message.Type)
+            {
+                case MessageType.Basic:
+                    _client.Send(message.Message, message.Room);
+                    break;
+
+                case MessageType.Private:
+                    _client.SendPrivateMessage(message.To, message.Message);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }
