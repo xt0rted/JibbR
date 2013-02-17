@@ -1,7 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-
-using JabbR.Client;
+﻿using JabbR.Client;
 using JabbR.Client.Models;
 
 namespace JibbR

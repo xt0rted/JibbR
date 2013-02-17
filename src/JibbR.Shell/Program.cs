@@ -15,9 +15,9 @@ namespace JibbR.Shell
             var password = System.Configuration.ConfigurationManager.AppSettings["jibbr:password"];
 
             var bootstrapper = new Bootstrapper();
-            bootstrapper.Bootstrap();
+            var container = bootstrapper.Bootstrap();
 
-            var robot = bootstrapper.CreateRobot();
+            var robot = container.GetInstance<IRobot>();
 
             Timer heartBeat = null;
             try

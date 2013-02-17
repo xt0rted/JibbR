@@ -17,17 +17,17 @@ namespace JibbR.Adapters
         {
             robot.AddResponder(@"github status$", (session, message, room, match) =>
             {
-                session.Client.Send(string.Format("GitHub {0}", Status()), room);
+                robot.SendMessage(room, "GitHub {0}", Status());
             });
 
             robot.AddResponder(@"github status last$", (session, message, room, match) =>
             {
-                session.Client.Send(string.Format("GitHub {0}", LastStatus()), room);
+                robot.SendMessage(room, "GitHub {0}", LastStatus());
             });
 
             robot.AddResponder(@"github status messages$", (session, message, room, match) =>
             {
-                session.Client.Send(string.Join("\n\n", StatusMessages()), room);
+                robot.SendMessage(room, string.Join("\n\n", StatusMessages()));
             });
         }
 

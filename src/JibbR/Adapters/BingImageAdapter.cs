@@ -37,7 +37,7 @@ namespace JibbR.Adapters
                     var results = JObject.Parse(result);
                     var imageUrl = results["d"]["results"].Select(x => (string) x["MediaUrl"]).RandomElement(new Random());
 
-                    session.Client.Send(imageUrl, room);
+                    robot.SendMessage(room, imageUrl);
                 }
             });
         }

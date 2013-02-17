@@ -28,5 +28,7 @@ namespace JibbR
         void AddResponder(string regex, MessageHandler function);
 
         void AddPrivateResponder(string regex, MessageHandler function);
+
+        void SendMessage(string room, string message, params object[] args);
     }
 }

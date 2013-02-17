@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace JibbR.Adapters
 {
@@ -16,7 +17,7 @@ namespace JibbR.Adapters
         {
             robot.AddResponder(@"bing\s+(me\s+)?(?<query>.*)", (session, message, room, match) =>
             {
-                System.Threading.Tasks.Task.Factory.StartNew(() =>
+                Task.Factory.StartNew(() =>
                 {
                     var query = match.Groups["query"].Value;
 
@@ -34,7 +35,7 @@ namespace JibbR.Adapters
                         resultMessage = string.Format("@{0} Sorry, Bing had zero results for '{1}'", session.Message.User.Name, query);
                     }
 
-                    session.Client.Send(resultMessage, room);
+                    robot.SendMessage(room, resultMessage);
                 });
             });
         }

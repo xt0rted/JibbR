@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-using JibbR.Web.App_Start;
+using JibbR.Queuing;
 
 using Nancy;
 
@@ -9,14 +9,21 @@ namespace JibbR.Web.Modules
 {
     public class DefaultModule : NancyModule
     {
-        public DefaultModule()
+        public DefaultModule(IEventBus eventBus)
         {
             Get["/"] = _ => "hi.";
 
             Get["/ping"] = _ =>
             {
-                JibbrSetup.Robot.HeartBeat();
-                return DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
+                string time = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
+
+                eventBus.Push(new JabbrMessage
+                {
+                    Room = "development",
+                    Message = string.Format("It is now {0}", time)
+                });
+
+                return time;
             };
         }
     }

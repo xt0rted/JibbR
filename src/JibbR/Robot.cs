@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using JabbR.Client;
 using JabbR.Client.Models;
 
+using JibbR.Queuing;
 using JibbR.Settings;
 
 namespace JibbR
@@ -19,6 +20,7 @@ namespace JibbR
 
         private readonly IAdapterManager _adapterManager;
         private readonly ISettingsManager _settingsManager;
+        private readonly IEventBus _eventBus;
         private JabbRClient _client;
         private bool _isSetup;
 
@@ -28,10 +30,11 @@ namespace JibbR
         private readonly Dictionary<string, MessageHandler> _responderHandlers = new Dictionary<string, MessageHandler>();
         private readonly Dictionary<string, MessageHandler> _privateResponderHandlers = new Dictionary<string, PrivateMessageHandler>();
 
-        public Robot(IAdapterManager adapterManager, ISettingsManager settingsManager)
+        public Robot(IAdapterManager adapterManager, ISettingsManager settingsManager, IEventBus eventBus)
         {
             _adapterManager = adapterManager;
             _settingsManager = settingsManager;
+            _eventBus = eventBus;
 
             settingsManager.LoadSettings();
         }
@@ -186,6 +189,9 @@ namespace JibbR
             _client.UserJoined += ClientOnUserJoined;
             _client.UserLeft += ClientOnUserLeft;
 
+            _eventBus.Pull<JabbrMessage>()
+                     .Subscribe(DoSendMessage);
+
             _adapterManager.SetupAdapters(this);
         }
 
@@ -287,6 +293,20 @@ namespace JibbR
         public void AddPrivateResponder(string regex, PrivateMessageHandler function)
         {
             _privateResponderHandlers.Add(regex, function);
+        }
+
+        public void SendMessage(string room, string message, params object[] args)
+        {
+            _eventBus.Push(new JabbrMessage
+            {
+                Room = room,
+                Message = string.Format(message, args)
+            });
+        }
+
+        public void DoSendMessage(JabbrMessage message)
+        {
+            _client.Send(message.Message, message.Room);
         }
     }
 }

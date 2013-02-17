@@ -29,7 +29,7 @@ namespace JibbR.Adapters
 
                     var solution = string.IsNullOrWhiteSpace(result) ? "Could not compute." : result;
 
-                    session.Client.Send(string.Format("@{0} {1}", session.Message.User.Name, solution), room);
+                    robot.SendMessage(room, "@{0} {1}", session.Message.User.Name, solution);
                 });
             });
         }

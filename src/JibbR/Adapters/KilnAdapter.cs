@@ -12,7 +12,7 @@ namespace JibbR.Adapters
                 var from = match.Groups["from"].Value;
                 var to = match.Groups["to"].Value;
 
-                session.Client.Send(string.Format("{0} was just pushed from ({1}) to ({2}) successfully.", project, from, to), room);
+                robot.SendMessage(room, "{0} was just pushed from ({1}) to ({2}) successfully.", project, from, to);
             });
 
             robot.AddResponder(@"push-alias\s+(?<from>.*)\s+is\s+(?<to>.*)", (session, message, room, match) =>
@@ -20,12 +20,12 @@ namespace JibbR.Adapters
                 var from = match.Groups["from"].Value;
                 var to = match.Groups["to"].Value;
 
-                session.Client.Send(string.Format("({0}) is now an alis for ({1})", from, to), room);
+                robot.SendMessage(room, "({0}) is now an alis for ({1})", from, to);
             });
 
             robot.AddResponder(@"push-alias\s+list", (session, message, room, match) =>
             {
-                session.Client.Send(string.Format("@{0} listing all user aliases", session.Message.User.Name), room);
+                robot.SendMessage(room, "@{0} listing all user aliases", session.Message.User.Name);
             });
         }
     }
