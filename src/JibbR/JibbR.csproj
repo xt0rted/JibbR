@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdapterDescriptionAttribute.cs" />
     <Compile Include="AdapterManager.cs" />
     <Compile Include="AdapterScanner.cs" />
     <Compile Include="Adapters\BingWebAdapter.cs" />
@@ -83,7 +84,9 @@
     <Compile Include="Adapters\IBingClient.cs" />
     <Compile Include="Adapters\KilnAdapter.cs" />
     <Compile Include="Adapters\MathAdapter.cs" />
+    <Compile Include="AdapterUsageAttribute.cs" />
     <Compile Include="Annotations\ReSharper.cs" />
+    <Compile Include="HelpDetails.cs" />
     <Compile Include="Queuing\EventBus.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="IAdapterManager.cs" />

@@ -6,6 +6,8 @@ namespace JibbR
 {
     public static class Helpers
     {
+        public static readonly string BotName = "JibbR";
+
         public static void DisposeSafely(this IDisposable source)
         {
             if (source != null)

@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 namespace JibbR.Adapters
 {
     [AdapterName("bing-web-adapter")]
+    [AdapterDescription("bing search", "Returns the first search result from bing"),
+     AdapterUsage("bing search", "jibbr bing [me] something amazing")]
     public class BingWebAdapter : IRobotAdapter
     {
         private readonly IBingClient _bingClient;

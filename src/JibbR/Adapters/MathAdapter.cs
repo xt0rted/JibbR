@@ -7,6 +7,11 @@ using RestSharp;
 namespace JibbR.Adapters
 {
     [AdapterName("math-adapter")]
+    [AdapterDescription("math", "Provides basic calculations and conversions"),
+     AdapterUsage("math", "jibbr calc [me] 10 + 3"),
+     AdapterUsage("math", "jibbr calculate [me] 10 + 3"),
+     AdapterUsage("math", "jibbr convert [me] 3 pounds to grams"),
+     AdapterUsage("math", "jibbr math [me] 10 + 3")]
     public class MathAdapter : IRobotAdapter
     {
         public void Setup(IRobot robot)

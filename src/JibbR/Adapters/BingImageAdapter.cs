@@ -6,6 +6,9 @@ using Newtonsoft.Json.Linq;
 namespace JibbR.Adapters
 {
     [AdapterName("bing-image-adapter")]
+    [AdapterDescription("bing images", "Returns a random image from bing's image search"),
+     AdapterUsage("bing images", "image [me] something amazing"),
+     AdapterUsage("bing images", "bing image [me] something amazing")]
     public class BingImageAdapter : IRobotAdapter
     {
         private readonly IBingClient _bingClient;

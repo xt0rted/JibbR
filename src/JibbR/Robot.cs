@@ -247,6 +247,16 @@ namespace JibbR
             }
         }
 
+        public string HelpText()
+        {
+            return _adapterManager.HelpText(Name);
+        }
+
+        public string HelpTextFor(string command)
+        {
+            return _adapterManager.HelpTextFor(Name, command);
+        }
+
         public void JoinRoom(string roomName)
         {
             Console.WriteLine("joining room '{0}'", roomName);

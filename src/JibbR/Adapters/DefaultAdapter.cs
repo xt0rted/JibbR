@@ -3,13 +3,35 @@
 namespace JibbR.Adapters
 {
     [AdapterName("default-adapter")]
+    [AdapterDescription("help", "Provides help about the loaded adapters"),
+     AdapterUsage("help", "jibbr help"),
+     AdapterUsage("help", "jibbr help math")]
+    [AdapterDescription("stalker", "Tells you the list of rooms a user is in which jibbr is also in"),
+     AdapterUsage("stalker", "/msg jibbr where are you"),
+     AdapterUsage("stalker", "/msg jibbr where is mr-t")]
     public class DefaultAdapter : IRobotAdapter
     {
         public void Setup(IRobot robot)
         {
             robot.AddResponder(@"help\s*(?<command>.*)?$", (session, message, room, match) =>
             {
-                robot.SendMessage(room, "@{0} Hey I just met you, and this is crazy, but there's no help right now; so call me later maybe! :)", session.Message.User.Name);
+                var from = session.Message.User.Name;
+
+                var command = match.ValueFor("command");
+                if (string.IsNullOrWhiteSpace(command))
+                {
+                    robot.SendPrivateMessage(@from, "Help\n\n{0}", robot.HelpText());
+                    return;
+                }
+
+                var helpMessage = "Help for {0}\n\n{1}";
+                var helpText = robot.HelpTextFor(command);
+                if (string.IsNullOrWhiteSpace(helpText))
+                {
+                    helpMessage = "No help for '{0}'";
+                }
+
+                robot.SendPrivateMessage(@from, helpMessage, command, helpText);
             });
 
             robot.AddListener(@"jibbe?r jabbe?r", (session, message, room, match) =>

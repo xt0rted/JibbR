@@ -18,6 +18,9 @@ namespace JibbR
         void Disconnect();
         void HeartBeat();
 
+        string HelpText();
+        string HelpTextFor(string command);
+
         void JoinRoom(string roomName);
         void JoinRooms(IEnumerable<string> roomNames);
 
