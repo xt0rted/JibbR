@@ -1,9 +1,9 @@
 # JibbR
-JibbR is a bot for [JabbR](https://github.com/davidfowl/JabbR) similar to [Hubot](https://github.com/github/hubot) but written in C# and using things like JabbR.Client, NancyFX, and Reactive Extensions.
+JibbR is a bot for [JabbR](https://github.com/davidfowl/JabbR) similar to [Hubot](https://github.com/github/hubot) but written in C# and using things like JabbR.Client, NancyFX, OWIN, and Reactive Extensions.
 
 ## Notes
 
-* This project is in a constant state to flux and it should be expected that things will break from time to time and that the api may change without notice.
+* This project is in a constant state of flux and it should be expected that things will break from time to time and that the api may change without notice.
 * An updated fork of [JabbR.Client](https://github.com/xt0rted/JabbR.Client) is being used.
 * SignalR is coming from http://www.myget.org/F/aspnetwebstacknightly/
 

@@ -13,6 +13,7 @@ namespace JibbR.Web.Modules
         {
             Get["/"] = _ => "hi.";
 
+            // Remove: this is for testing
             Get["/ping"] = _ =>
             {
                 string time = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);

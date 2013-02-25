@@ -7,18 +7,21 @@ using JabbR.Client;
 using JabbR.Client.Models;
 
 using JibbR.Queuing;
+using JibbR.Routing;
 using JibbR.Settings;
 
 namespace JibbR
 {
     using MessageHandler = Action<ISession, string, string, Match>;
     using PrivateMessageHandler = Action<ISession, string, string, Match>;
+    using RouteHandler = Action<IRequest, IResponse>;
 
     public class Robot : IRobot
     {
         private const RegexOptions DefaultRegexOptions = RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Compiled;
 
         private readonly IAdapterManager _adapterManager;
+        private readonly IRouteManager _routeManager;
         private readonly ISettingsManager _settingsManager;
         private readonly IEventBus _eventBus;
         private JabbRClient _client;
@@ -30,9 +33,10 @@ namespace JibbR
         private readonly Dictionary<string, MessageHandler> _responderHandlers = new Dictionary<string, MessageHandler>();
         private readonly Dictionary<string, MessageHandler> _privateResponderHandlers = new Dictionary<string, PrivateMessageHandler>();
 
-        public Robot(IAdapterManager adapterManager, ISettingsManager settingsManager, IEventBus eventBus)
+        public Robot(IAdapterManager adapterManager, IRouteManager routeManager, ISettingsManager settingsManager, IEventBus eventBus)
         {
             _adapterManager = adapterManager;
+            _routeManager = routeManager;
             _settingsManager = settingsManager;
             _eventBus = eventBus;
 
@@ -303,6 +307,11 @@ namespace JibbR
         public void AddPrivateResponder(string regex, PrivateMessageHandler function)
         {
             _privateResponderHandlers.Add(regex, function);
+        }
+
+        public void AddRoute(RouteMethod method, string path, RouteHandler function)
+        {
+            _routeManager.RegisterRoute(method, path, function);
         }
 
         public void SendMessage(string room, string message, params object[] args)

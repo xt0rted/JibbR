@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 
 using JibbR.Adapters;
 using JibbR.Queuing;
+using JibbR.Routing;
 using JibbR.Settings;
 
 using StructureMap;
@@ -29,22 +30,28 @@ namespace JibbR
                 kernel.For<IFileSystem>()
                       .Use<FileSystem>();
 
-                kernel.For<ISettingsManager>()
-                      .Singleton()
-                      .Use<SettingsManager>();
-
+                // Note: should this be a singleton?
                 kernel.For<IAdapterManager>()
                       .Use<AdapterManager>();
-
-                kernel.For<IEventBus>()
-                      .Singleton()
-                      .Use<EventBus>();
 
                 kernel.For<IRobot>()
                       .Use<Robot>();
 
                 kernel.For<IBingClient>()
                       .Use<BingClient>();
+
+                // things shared between the bot & web host need to be singletons
+                kernel.For<ISettingsManager>()
+                      .Singleton()
+                      .Use<SettingsManager>();
+
+                kernel.For<IRouteManager>()
+                      .Singleton()
+                      .Use<RouteManager>();
+
+                kernel.For<IEventBus>()
+                      .Singleton()
+                      .Use<EventBus>();
             });
 
             return ObjectFactory.Container;

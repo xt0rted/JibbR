@@ -36,7 +36,7 @@
     <Reference Include="JabbR.Client">
       <HintPath>..\..\lib\JabbR.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Client">
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.SignalR.Client.1.1.0-alpha1-130131\lib\net40\Microsoft.AspNet.SignalR.Client.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -84,6 +84,7 @@
     <Compile Include="Adapters\IBingClient.cs" />
     <Compile Include="Adapters\KilnAdapter.cs" />
     <Compile Include="Adapters\MathAdapter.cs" />
+    <Compile Include="Adapters\RouteTestAdapter.cs" />
     <Compile Include="AdapterUsageAttribute.cs" />
     <Compile Include="Annotations\ReSharper.cs" />
     <Compile Include="HelpDetails.cs" />
@@ -100,6 +101,11 @@
     <Compile Include="Queuing\MessageType.cs" />
     <Compile Include="Robot.cs" />
     <Compile Include="AdapterNameAttribute.cs" />
+    <Compile Include="Routing\IRequest.cs" />
+    <Compile Include="Routing\IResponse.cs" />
+    <Compile Include="Routing\IRouteManager.cs" />
+    <Compile Include="Routing\RouteManager.cs" />
+    <Compile Include="Routing\RouteMethod.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Settings\AdapterDetails.cs" />
     <Compile Include="Settings\IRobotSettings.cs" />
