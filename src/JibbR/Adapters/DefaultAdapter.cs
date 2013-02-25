@@ -13,10 +13,8 @@ namespace JibbR.Adapters
     {
         public void Setup(IRobot robot)
         {
-            robot.AddResponder(@"help\s*(?<command>.*)?$", (session, message, room, match) =>
+            robot.AddPrivateResponder(@"help\s*(?<command>.*)?$", (session, message, from, match) =>
             {
-                var from = session.Message.User.Name;
-
                 var command = match.ValueFor("command");
                 if (string.IsNullOrWhiteSpace(command))
                 {
