@@ -5,7 +5,6 @@ JibbR is a bot for [JabbR](https://github.com/davidfowl/JabbR) similar to [Hubot
 
 * This project is in a constant state of flux and it should be expected that things will break from time to time and that the api may change without notice.
 * An updated fork of [JabbR.Client](https://github.com/xt0rted/JabbR.Client) is being used.
-* SignalR is coming from http://www.myget.org/F/aspnetwebstacknightly/
 
 ## Setup
 JibbR currently runs in either the console or as a website.
