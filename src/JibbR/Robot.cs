@@ -24,7 +24,7 @@ namespace JibbR
         private readonly IRouteManager _routeManager;
         private readonly ISettingsManager _settingsManager;
         private readonly IEventBus _eventBus;
-        private JabbRClient _client;
+        private IJabbRClient _client;
         private bool _isSetup;
 
         private readonly List<string> _currentRooms = new List<string>();
