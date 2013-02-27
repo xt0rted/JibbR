@@ -28,12 +28,22 @@ namespace JibbR.Adapters
                 return;
             }
 
+            BingSafeSearch safeSearch;
+            if (!Enum.TryParse((string) settings.Settings.SafeSearch, true, out safeSearch))
+            {
+                safeSearch = BingSafeSearch.Strict;
+
+                // this will become the default value
+                settings.Settings.SafeSearch = safeSearch.ToString();
+            }
+
             robot.AddListener(@"^(bing )?image( me)? (?<query>.*)", (session, message, room, match) =>
             {
                 var query = match.ValueFor("query");
 
-                var searchResult = _bingClient.ImageSearch((string) settings.Settings.ApiKey, query);
+                var searchResult = _bingClient.ImageSearch((string) settings.Settings.ApiKey, query, safeSearch);
 
+                // ToDo: unhack this
                 if (searchResult.StartsWith("{", StringComparison.OrdinalIgnoreCase))
                 {
                     var results = JObject.Parse(searchResult);

@@ -76,6 +76,7 @@
     <Compile Include="AdapterDescriptionAttribute.cs" />
     <Compile Include="AdapterManager.cs" />
     <Compile Include="AdapterScanner.cs" />
+    <Compile Include="Adapters\BingSafeSearch.cs" />
     <Compile Include="Adapters\BingWebAdapter.cs" />
     <Compile Include="Adapters\BingClient.cs" />
     <Compile Include="Adapters\BingImageAdapter.cs" />

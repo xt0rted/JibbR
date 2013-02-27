@@ -16,7 +16,7 @@ namespace JibbR.Adapters
             return result.Content;
         }
 
-        public string ImageSearch(string apiKey, string term)
+        public string ImageSearch(string apiKey, string term, BingSafeSearch safeSearch)
         {
             var client = new RestClient("https://api.datamarket.azure.com/Bing/Search/v1/")
             {
@@ -25,8 +25,9 @@ namespace JibbR.Adapters
 
             var action = new RestRequest("Image", Method.GET);
             action.AddParameter("Query", "'" + term + "'")
-                  .AddParameter("$format", "json") // i don't think this is really needed since we get json back even without it
-                  .AddParameter("$top", "50");
+                  .AddParameter("$format", "json")
+                  .AddParameter("$top", "50")
+                  .AddParameter("Adult", "'" + safeSearch + "'");
 
             var result = client.Execute(action);
 
