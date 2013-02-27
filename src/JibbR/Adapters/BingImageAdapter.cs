@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 using Newtonsoft.Json.Linq;
 
@@ -33,14 +32,24 @@ namespace JibbR.Adapters
             {
                 var query = match.ValueFor("query");
 
-                var result = _bingClient.ImageSearch((string) settings.Settings.ApiKey, query);
+                var searchResult = _bingClient.ImageSearch((string) settings.Settings.ApiKey, query);
 
-                if (result.StartsWith("{"))
+                if (searchResult.StartsWith("{", StringComparison.OrdinalIgnoreCase))
                 {
-                    var results = JObject.Parse(result);
-                    var imageUrl = results["d"]["results"].Select(x => (string) x["MediaUrl"]).RandomElement(new Random());
+                    var results = JObject.Parse(searchResult);
+                    var urls = results["d"]["results"].SelectList(x => (string) x["MediaUrl"]);
 
-                    robot.SendMessage(room, imageUrl);
+                    string messageResult;
+                    if (urls.Count > 0)
+                    {
+                        messageResult = urls.RandomElement(new Random());
+                    }
+                    else
+                    {
+                        messageResult = string.Format("@{0} I couldn't find any images for '{1}'", session.Message.User.Name, query);
+                    }
+
+                    robot.SendMessage(room, messageResult);
                 }
             });
         }

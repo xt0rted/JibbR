@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace JibbR
@@ -37,6 +38,11 @@ namespace JibbR
             }
 
             return current;
+        }
+
+        public static List<TResult> SelectList<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector)
+        {
+            return source.Select(selector).ToList();
         }
 
         public static string ValueFor(this Match match, string group)
