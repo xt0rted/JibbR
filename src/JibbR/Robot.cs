@@ -242,15 +242,6 @@ namespace JibbR
             _settingsManager.SaveSettings();
         }
 
-        public void HeartBeat()
-        {
-            var room = _currentRooms.FirstOrDefault();
-            if (room != null)
-            {
-                _client.SetTyping(room);
-            }
-        }
-
         public string HelpText()
         {
             return _adapterManager.HelpText(Name);
@@ -352,6 +343,7 @@ namespace JibbR
             switch(message.Type)
             {
                 case MessageType.Basic:
+                    _client.SetTyping(message.Room);
                     _client.Send(message.Message, message.Room);
                     break;
 

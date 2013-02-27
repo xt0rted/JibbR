@@ -18,7 +18,6 @@ namespace JibbR
         void SetupClient(Uri host);
         void Connect(string userName, string password);
         void Disconnect();
-        void HeartBeat();
 
         string HelpText();
         string HelpTextFor(string command);
