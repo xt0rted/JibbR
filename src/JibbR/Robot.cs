@@ -306,7 +306,12 @@ namespace JibbR
 
         public void AddPrivateResponder(string regex, PrivateMessageHandler function)
         {
-            _privateResponderHandlers.Add(regex, function);
+            if (regex.StartsWith("^", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.Error.WriteLine("Responder filters should not start with '^' because it is automatically added. Did you mean to use a listener instead?");
+            }
+
+            _privateResponderHandlers.Add("^" + regex, function);
         }
 
         public void AddRoute(RouteMethod method, string path, RouteHandler function)
