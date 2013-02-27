@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO.Abstractions;
 
-using JibbR.Adapters;
+using JibbR.Adapters.Bing;
 using JibbR.Queuing;
 using JibbR.Routing;
 using JibbR.Settings;

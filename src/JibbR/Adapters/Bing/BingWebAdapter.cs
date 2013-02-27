@@ -1,16 +1,16 @@
 ﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace JibbR.Adapters
+namespace JibbR.Adapters.Bing
 {
     [AdapterName("bing-web-adapter")]
     [AdapterDescription("bing search", "Returns the first search result from bing"),
      AdapterUsage("bing search", "jibbr bing [me] something amazing")]
-    public class BingWebAdapter : IRobotAdapter
+    public class WebAdapter : IRobotAdapter
     {
         private readonly IBingClient _bingClient;
 
-        public BingWebAdapter(IBingClient bingClient)
+        public WebAdapter(IBingClient bingClient)
         {
             _bingClient = bingClient;
         }

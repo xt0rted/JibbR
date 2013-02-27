@@ -1,6 +1,6 @@
 ﻿using RestSharp;
 
-namespace JibbR.Adapters
+namespace JibbR.Adapters.Bing
 {
     public class BingClient : IBingClient
     {
@@ -16,7 +16,7 @@ namespace JibbR.Adapters
             return result.Content;
         }
 
-        public string ImageSearch(string apiKey, string term, BingSafeSearch safeSearch)
+        public string ImageSearch(string apiKey, string term, SafeSearch safeSearch)
         {
             var client = new RestClient("https://api.datamarket.azure.com/Bing/Search/v1/")
             {

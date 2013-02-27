@@ -2,24 +2,24 @@
 
 using Newtonsoft.Json.Linq;
 
-namespace JibbR.Adapters
+namespace JibbR.Adapters.Bing
 {
     [AdapterName("bing-image-adapter")]
     [AdapterDescription("bing images", "Returns a random image from bing's image search"),
      AdapterUsage("bing images", "image [me] something amazing"),
      AdapterUsage("bing images", "bing image [me] something amazing")]
-    public class BingImageAdapter : IRobotAdapter
+    public class ImageAdapter : IRobotAdapter
     {
         private readonly IBingClient _bingClient;
 
-        public BingImageAdapter(IBingClient bingClient)
+        public ImageAdapter(IBingClient bingClient)
         {
             _bingClient = bingClient;
         }
 
         public void Setup(IRobot robot)
         {
-            var settings = robot.Settings.SettingsFor<BingImageAdapter>();
+            var settings = robot.Settings.SettingsFor<ImageAdapter>();
 
             // for now there's no point in registering this listener if there's no api key
             if (string.IsNullOrWhiteSpace((string) settings.Settings.ApiKey))
@@ -28,10 +28,10 @@ namespace JibbR.Adapters
                 return;
             }
 
-            BingSafeSearch safeSearch;
+            SafeSearch safeSearch;
             if (!Enum.TryParse((string) settings.Settings.SafeSearch, true, out safeSearch))
             {
-                safeSearch = BingSafeSearch.Strict;
+                safeSearch = SafeSearch.Strict;
 
                 // this will become the default value
                 settings.Settings.SafeSearch = safeSearch.ToString();

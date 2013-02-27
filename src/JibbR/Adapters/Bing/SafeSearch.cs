@@ -1,6 +1,6 @@
-﻿namespace JibbR.Adapters
+﻿namespace JibbR.Adapters.Bing
 {
-    public enum BingSafeSearch
+    public enum SafeSearch
     {
         Strict,
         Moderate,
