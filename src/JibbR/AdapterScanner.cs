@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -10,8 +9,7 @@ namespace JibbR
     {
         public void Process(Type type, Registry registry)
         {
-            var interfaces = type.GetInterfaces();
-            if (!interfaces.Contains(typeof (IRobotAdapter)))
+            if (!typeof (IRobotAdapter).IsAssignableFrom(type))
             {
                 return;
             }
