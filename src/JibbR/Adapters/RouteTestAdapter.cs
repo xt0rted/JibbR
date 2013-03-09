@@ -15,25 +15,38 @@ namespace JibbR.Adapters
     {
         public void Setup(IRobot robot)
         {
+            var settings = robot.Settings.SettingsFor<RouteTestAdapter>();
+
+            var room = (string) settings.Settings.Room;
+
             robot.AddRoute(RouteMethod.Get, "jibbr/ping", (request, response) =>
             {
-                response.Status = "200 OK";
+                response.StatusCode = 200;
                 response.ContentType = "text/html";
-                response.Write("<html><body><h1>jibbr ping</h1></body></html>");
+                response.Write("<html>" +
+                                   "<head>" +
+                                       "<title>JibbR</title>" +
+                                   "</head>" +
+                                   "<body>" +
+                                       "<p>jibbr ping</p>" +
+                                   "</body>" +
+                               "</html>");
 
-                robot.SendMessage("development", "ping/pong");
+                robot.SendMessage(room, "syn/ack");
             });
 
             robot.AddRoute(RouteMethod.Post, "jibbr/ping", (request, response) =>
             {
                 var body = GetPayload(request);
-                var message = (string)body["test"];
 
-                response.Status = "200 OK";
-                response.ContentType = "text/html";
-                response.Write("<html><body><h1>{0}</h1></body></html>", message);
+                var message = string.Format("New push by {0} with {1} commit[s]. {2}",
+                                            body["head_commit"]["author"]["username"],
+                                            body["commits"].Count(),
+                                            body["compare"]);
 
-                robot.SendMessage("development", message);
+                response.StatusCode = 200;
+
+                robot.SendMessage(room, message);
             });
         }
 
