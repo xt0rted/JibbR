@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +14,8 @@ namespace JibbR.Shell
             var host = System.Configuration.ConfigurationManager.AppSettings["jibbr:host"];
             var userName = System.Configuration.ConfigurationManager.AppSettings["jibbr:username"];
             var password = System.Configuration.ConfigurationManager.AppSettings["jibbr:password"];
+
+            ServicePointManager.DefaultConnectionLimit = 100;
 
             var bootstrapper = new Bootstrapper();
             var container = bootstrapper.Bootstrap();
