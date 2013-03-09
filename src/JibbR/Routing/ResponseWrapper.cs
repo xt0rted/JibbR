@@ -6,9 +6,8 @@ using System.Text;
 using Gate;
 
 using JibbR.Annotations;
-using JibbR.Routing;
 
-namespace JibbR.Web.Routing
+namespace JibbR.Routing
 {
     public class ResponseWrapper : IResponse
     {

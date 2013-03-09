@@ -1,5 +1,5 @@
 # JibbR
-JibbR is a bot for [JabbR](https://github.com/davidfowl/JabbR) similar to [Hubot](https://github.com/github/hubot) but written in C# and using things like JabbR.Client, NancyFX, OWIN, and Reactive Extensions.
+JibbR is a bot for [JabbR](https://github.com/davidfowl/JabbR) similar to [Hubot](https://github.com/github/hubot) but written in C# and using things like JabbR.Client, OWIN, and Reactive Extensions.
 
 ## Notes
 

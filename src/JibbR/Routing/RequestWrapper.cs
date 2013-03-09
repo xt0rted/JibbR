@@ -3,9 +3,7 @@ using System.IO;
 
 using Gate;
 
-using JibbR.Routing;
-
-namespace JibbR.Web.Routing
+namespace JibbR.Routing
 {
     public class RequestWrapper : IRequest
     {

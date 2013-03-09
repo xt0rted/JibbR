@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Owin.Hosting;
+
 namespace JibbR.Shell
 {
     class Program
@@ -14,7 +16,6 @@ namespace JibbR.Shell
 
             var bootstrapper = new Bootstrapper();
             var container = bootstrapper.Bootstrap();
-
             var robot = container.GetInstance<IRobot>();
 
             try
@@ -23,13 +24,18 @@ namespace JibbR.Shell
 
                 robot.Connect(userName, password);
 
-                Task.Factory.StartNew(() =>
+                var url = new UriBuilder
                 {
-                    SpinWait.SpinUntil(() =>
-                    {
-                        return Console.KeyAvailable && Console.ReadKey().Key == ConsoleKey.Escape;
-                    });
-                }).Wait();
+                    Scheme = "http",
+                    Host = "localhost",
+                    Port = 1326
+                };
+
+                using (WebApplication.Start<Startup>(url.ToString()))
+                {
+                    Console.WriteLine("Server running on {0}", url);
+                    Task.Factory.StartNew(() => SpinWait.SpinUntil(() => Console.KeyAvailable && Console.ReadKey().Key == ConsoleKey.Escape)).Wait();
+                }
 
                 robot.Disconnect();
             }

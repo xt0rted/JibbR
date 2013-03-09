@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace JibbR.Web
+namespace JibbR
 {
     public partial class Startup
     {
