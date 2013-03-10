@@ -8,15 +8,27 @@ using JibbR.Routing;
 
 using Owin;
 
+using StructureMap;
+
 namespace JibbR
 {
     public partial class Startup
     {
+        private IContainer _container;
+
+        public Startup()
+        {
+        }
+
+        public Startup(IContainer container)
+        {
+            _container = container;
+        }
+
         [UsedImplicitly]
         public void Configuration(IAppBuilder appBuilder)
         {
-            var bootstrapper = new Bootstrapper();
-            var container = bootstrapper.Bootstrap();
+            var container = GetApplicationContainer();
             var routeManager = container.GetInstance<IRouteManager>();
 
             appBuilder.UseShowExceptions()
@@ -67,6 +79,17 @@ namespace JibbR
             }
 
             return TaskHelpers.Completed();
+        }
+
+        private IContainer GetApplicationContainer()
+        {
+            if (_container == null)
+            {
+                var bootstrapper = new Bootstrapper();
+                _container = bootstrapper.Bootstrap();
+            }
+
+            return _container;
         }
     }
 }

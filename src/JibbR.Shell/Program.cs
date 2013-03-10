@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Net;
 
 using Microsoft.Owin.Hosting;
@@ -9,9 +10,9 @@ namespace JibbR.Shell
     {
         static void Main(string[] args)
         {
-            var host = System.Configuration.ConfigurationManager.AppSettings["jibbr:host"];
-            var userName = System.Configuration.ConfigurationManager.AppSettings["jibbr:username"];
-            var password = System.Configuration.ConfigurationManager.AppSettings["jibbr:password"];
+            var host = ConfigurationManager.AppSettings["jibbr:host"];
+            var userName = ConfigurationManager.AppSettings["jibbr:username"];
+            var password = ConfigurationManager.AppSettings["jibbr:password"];
 
             ServicePointManager.DefaultConnectionLimit = 100;
 
@@ -32,7 +33,7 @@ namespace JibbR.Shell
                     Port = 1326
                 };
 
-                using (WebApplication.Start<Startup>(url.ToString()))
+                using (WebApplication.Start(url.ToString(), new Startup(container).Configuration))
                 {
                     Console.WriteLine("Server running on {0}", url);
                     Console.ReadLine();
