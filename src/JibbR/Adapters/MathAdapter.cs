@@ -32,7 +32,7 @@ namespace JibbR.Adapters
 
                     var result = JObject.Parse(response.Content).Value<string>("rhs");
 
-                    var solution = string.IsNullOrWhiteSpace(result) ? "Could not compute." : result;
+                    var solution = string.IsNullOrWhiteSpace(result) ? "Could not compute." : result.Replace("\uFFFD", string.Empty);
 
                     robot.SendMessage(room, "@{0} {1}", session.Message.User.Name, solution);
                 });
