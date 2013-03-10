@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Microsoft.Owin.Hosting;
 
@@ -37,7 +35,7 @@ namespace JibbR.Shell
                 using (WebApplication.Start<Startup>(url.ToString()))
                 {
                     Console.WriteLine("Server running on {0}", url);
-                    Task.Factory.StartNew(() => SpinWait.SpinUntil(() => Console.KeyAvailable && Console.ReadKey().Key == ConsoleKey.Escape)).Wait();
+                    Console.ReadLine();
                 }
 
                 robot.Disconnect();
