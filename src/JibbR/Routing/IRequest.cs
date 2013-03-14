@@ -8,24 +8,21 @@ namespace JibbR.Routing
         // properties
         Stream Body { get; set; }
         string ContentType { get; }
-        IDictionary<string, string> Cookies { get; }
-        IDictionary<string, object> Environment { get; set; }
+        IDictionary<string, object> Dictionary { get; }
         bool HasFormData { get; }
         bool HasParseableData { get; }
         IDictionary<string, string[]> Headers { get; set; }
-        //string Host { get; set; }
-        //string HostWithPort { get; set; }
+        string Host { get; set; }
         string MediaType { get; }
         string Method { get; set; }
         string Path { get; set; }
-        //string PathBase { get; set; }
-        //int Port { get; set; }
-        //string Protocol { get; set; }
-        IDictionary<string, string> Query { get; }
+        string PathBase { get; set; }
+        string Protocol { get; set; }
         string QueryString { get; set; }
-        //string Scheme { get; set; }
+        string Scheme { get; set; }
 
         // methods
+        string GetHeader(string key);
         IDictionary<string, string> ReadForm();
     }
 }

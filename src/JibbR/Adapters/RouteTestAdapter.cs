@@ -19,10 +19,10 @@ namespace JibbR.Adapters
 
             var room = (string) settings.Settings.Room;
 
-            robot.AddRoute(RouteMethod.Get, "jibbr/ping", (request, response) =>
+            robot.AddRoute(RouteMethod.Get, "/jibbr/ping", (request, response) =>
             {
-                response.StatusCode = 200;
                 response.ContentType = "text/html";
+                response.StatusCode = 200;
                 response.Write("<html>" +
                                    "<head>" +
                                        "<title>JibbR</title>" +
@@ -35,7 +35,7 @@ namespace JibbR.Adapters
                 robot.SendMessage(room, "syn/ack");
             });
 
-            robot.AddRoute(RouteMethod.Post, "jibbr/ping", (request, response) =>
+            robot.AddRoute(RouteMethod.Post, "/jibbr/ping", (request, response) =>
             {
                 var body = GetPayload(request);
 
@@ -55,7 +55,6 @@ namespace JibbR.Adapters
         {
             JObject payload;
 
-            // we don't care about content type, just let it choked
             if (request.HasFormData)
             {
                 var form = request.ReadForm();

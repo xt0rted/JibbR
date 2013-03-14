@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using Gate;
 
 using JibbR.Annotations;
 using JibbR.Routing;
@@ -12,6 +11,8 @@ using StructureMap;
 
 namespace JibbR
 {
+    using AppFunc = Func<IDictionary<string, object>, Task>;
+
     public partial class Startup
     {
         private IContainer _container;
@@ -31,11 +32,9 @@ namespace JibbR
             var container = GetApplicationContainer();
             var routeManager = container.GetInstance<IRouteManager>();
 
-            appBuilder.UseShowExceptions()
-                      .UseContentType()
-                      .Map("/", IndexRoute)
-                      .Map("/robots.txt", RobotsRoute)
-                      .Map("/adapters/", env => AdapterRoutes(routeManager, env));
+            appBuilder.MapPath<AppFunc>("//", IndexRoute)
+                      .MapPath<AppFunc>("/robots.txt", RobotsRoute)
+                      .MapPath<AppFunc>("/adapters/", env => AdapterRoutes(routeManager, env));
 
             SetupErrorHandling();
         }
@@ -44,6 +43,7 @@ namespace JibbR
         {
             IResponse response = new ResponseWrapper(env);
 
+            response.ContentType = "text/html";
             response.StatusCode = 200;
             response.Write("<html>" +
                                "<head>" +
@@ -75,7 +75,8 @@ namespace JibbR
             var result = routeManager.HandleRoute(request, response);
             if (!result)
             {
-                response.Status = "404 Route Not Found";
+                response.ReasonPhrase = "Route Not Found";
+                response.StatusCode = 404;
             }
 
             return TaskHelpers.Completed();
