@@ -22,7 +22,7 @@ namespace JibbR.Shell
 
             try
             {
-                robot.SetupClient(new Uri(host));
+                robot.SetupClient(host);
 
                 robot.Connect(userName, password);
 

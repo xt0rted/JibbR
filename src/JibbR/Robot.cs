@@ -176,7 +176,7 @@ namespace JibbR
             return false;
         }
 
-        public void SetupClient(Uri host)
+        public void SetupClient(string url)
         {
             if (_isSetup)
             {
@@ -186,7 +186,7 @@ namespace JibbR
 
             _isSetup = true;
 
-            _client = new JabbRClient(host);
+            _client = new JabbRClient(url);
 
             _client.MessageReceived += ClientOnMessageReceived;
             _client.PrivateMessage += ClientOnPrivateMessage;

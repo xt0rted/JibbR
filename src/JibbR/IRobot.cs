@@ -15,7 +15,7 @@ namespace JibbR
         string Name { get; }
         IRobotSettings Settings { get; }
 
-        void SetupClient(Uri host);
+        void SetupClient(string url);
         void Connect(string userName, string password);
         void Disconnect();
 

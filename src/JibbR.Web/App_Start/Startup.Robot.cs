@@ -1,5 +1,4 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Threading.Tasks;
 
 using JibbR.Annotations;
@@ -30,7 +29,7 @@ namespace JibbR.Web
             {
                 try
                 {
-                    _robot.SetupClient(new Uri(host));
+                    _robot.SetupClient(host);
 
                     _robot.Connect(userName, password);
                 }
